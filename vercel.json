@@ -10,18 +10,5 @@
       "src": "/(.*)",
       "dest": "webhook.py"
     }
-  ],
-  "functions": {
-    "webhook": {
-      "handler": "webhook.handler"
-    }
-  },
-  "events": {
-    "afterBuild": [
-      {
-        "function": "webhook",
-        "command": "python -c \"import os; from main import bot; bot.set_webhook('https://' + os.environ['VERCEL_URL'])\""
-      }
-    ]
-  }
+  ]
 }
