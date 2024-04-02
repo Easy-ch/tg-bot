@@ -12,7 +12,7 @@ class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
 
     def do_GET(self):
-        # time.sleep(1.5)
+        time.sleep(1.5)
         bot.set_webhook('https://' + os.environ['VERCEL_URL'])
         self.send_response(200)
         self.end_headers()
