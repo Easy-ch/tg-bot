@@ -1,6 +1,6 @@
 from telebot import TeleBot
 
-bot = TeleBot('<TOKEN>', threaded=False)
+bot = TeleBot('6722734578:AAE0e9osDxTybDKd4qovXXneqrSe9eES6ug', threaded=False)
 
 
 @bot.message_handler()
