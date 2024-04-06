@@ -8,16 +8,25 @@ bot=telebot.TeleBot(token)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    welcome_text = 'Здравствуйте, это Telegram-бот магазина WN market, здесь вы сможете отследить свой заказ, рассчитать стоимость заказа, узнать ответы на самые часто задаваемые вопросы и многое другое! '
-    keyboard = telebot.types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
-    button1 = telebot.types.KeyboardButton('Рассчитать стоимость товара')
-    button2 = telebot.types.KeyboardButton('FAQ')
-    button3 = telebot.types.KeyboardButton('Какой текущий курс юаня?')
-    button4 = telebot.types.KeyboardButton('Сделать заказ')
-    button = telebot.types.KeyboardButton('Написать отзыв')
-    keyboard.add(button1,button2,button3,button4,button)
-    time.sleep(0.5)
-    bot.send_message(message.chat.id,welcome_text,reply_markup=keyboard)
+    try:
+        welcome_text = 'Здравствуйте, это Telegram-бот магазина WN market, здесь вы сможете отследить свой заказ, рассчитать стоимость заказа, узнать ответы на самые часто задаваемые вопросы и многое другое! '
+        keyboard = telebot.types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
+        button1 = telebot.types.KeyboardButton('Рассчитать стоимость товара')
+        button2 = telebot.types.KeyboardButton('FAQ')
+        button3 = telebot.types.KeyboardButton('Какой текущий курс юаня?')
+        button4 = telebot.types.KeyboardButton('Сделать заказ')
+        button = telebot.types.KeyboardButton('Написать отзыв')
+        keyboard.add(button1,button2,button3,button4,button)
+        time.sleep(0.5)
+        bot.send_message(message.chat.id,welcome_text,reply_markup=keyboard)
+     except telebot.apihelper.ApiTelegramException as e:
+        # Обрабатываем ошибку "Too Many Requests"
+        if e.error_code == 429:
+            retry_after = e.result_json.get('parameters', {}).get('retry_after', 1)
+            time.sleep(retry_after)
+            send_welcome(message)
+        else:
+            logging.error("Error occurred: %s", e)
 def calculation(message):
     gaid=open('gaid.jpg','rb')
     bot.send_photo(message.chat.id,gaid)
@@ -121,4 +130,3 @@ def user(message):
        send_welcome(message)
     elif message.text == 'Сменить курс':
         course_change(message)
-bot.polling()
