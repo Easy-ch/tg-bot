@@ -1,5 +1,6 @@
 import telebot
 import math
+import time
 course = 0
 token='6430079230:AAEDudbAk8MZfHUKhILZGv6i0TfKZd_EFXs'
 bot=telebot.TeleBot(token)
@@ -15,6 +16,7 @@ def send_welcome(message):
     button4 = telebot.types.KeyboardButton('Сделать заказ')
     button = telebot.types.KeyboardButton('Написать отзыв')
     keyboard.add(button1,button2,button3,button4,button)
+    time.sleep(0.5)
     bot.send_message(message.chat.id,welcome_text,reply_markup=keyboard)
 def calculation(message):
     gaid=open('gaid.jpg','rb')
@@ -119,3 +121,4 @@ def user(message):
        send_welcome(message)
     elif message.text == 'Сменить курс':
         course_change(message)
+bot.polling()
