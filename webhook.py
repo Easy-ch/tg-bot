@@ -12,7 +12,6 @@ executor = ThreadPoolExecutor(max_workers=10)
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
     def do_GET(self):
-        time.sleep(2)
         bot.set_webhook('https://' + os.environ['VERCEL_URL'])
         self.send_response(200)
         self.end_headers()
@@ -21,7 +20,7 @@ class handler(BaseHTTPRequestHandler):
         cl = int(self.headers['Content-Length'])
         post_data = self.rfile.read(cl)
         body = json.loads(post_data.decode())
-
+        executor.submit(self.process_update, body)
         bot.process_new_updates([types.Update.de_json(body)])
 
         self.send_response(204)
