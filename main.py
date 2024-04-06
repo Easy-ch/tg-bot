@@ -119,3 +119,5 @@ def user(message):
        send_welcome(message)
     elif message.text == 'Сменить курс':
         course_change(message)
+if __name__ == '__main__':
+    send_welcome()
