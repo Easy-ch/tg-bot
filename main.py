@@ -4,7 +4,7 @@ import time
 course = 0
 token='6430079230:AAEDudbAk8MZfHUKhILZGv6i0TfKZd_EFXs'
 bot=telebot.TeleBot(token)
-
+logging.basicConfig(level=logging.ERROR)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
