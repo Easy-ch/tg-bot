@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from main import bot
 
 
-executor = ThreadPoolExecutor(max_workers=10)
+
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
     def do_GET(self):
@@ -20,10 +20,6 @@ class handler(BaseHTTPRequestHandler):
         cl = int(self.headers['Content-Length'])
         post_data = self.rfile.read(cl)
         body = json.loads(post_data.decode())
-        executor.submit(self.process_update, body)
         bot.process_new_updates([types.Update.de_json(body)])
-
         self.send_response(204)
         self.end_headers()
-    def process_update(self, body):
-        bot.process_new_updates([types.Update.de_json(body)])
