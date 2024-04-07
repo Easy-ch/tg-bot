@@ -1,10 +1,10 @@
 import telebot
 import math
-import time
 course = 0
 token='6430079230:AAEDudbAk8MZfHUKhILZGv6i0TfKZd_EFXs'
 bot=telebot.TeleBot(token)
 
+bot.delete_webhook()
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     welcome_text = 'Здравствуйте, это Telegram-бот магазина WN market, здесь вы сможете отследить свой заказ, рассчитать стоимость заказа, узнать ответы на самые часто задаваемые вопросы и многое другое! '
@@ -16,12 +16,12 @@ def send_welcome(message):
     button = telebot.types.KeyboardButton('Написать отзыв')
     keyboard.add(button1,button2,button3,button4,button)
     bot.send_message(message.chat.id,welcome_text,reply_markup=keyboard)
-    
 def calculation(message):
     gaid=open('gaid.jpg','rb')
     bot.send_photo(message.chat.id,gaid)
     r=bot.send_message(message.chat.id,'Напишите сумму заказа в юанях')
     bot.register_next_step_handler(r,answer)
+
 def answer(message):
     try:
      buy=float((message.text).replace(',',''))
@@ -37,8 +37,10 @@ def curse(message):
 @bot.message_handler(commands=['admin'])
 def handle_admin(message):
     chat_id = message.chat.id
-    user_id = message.from_user.id
-    if user_id  == 5034422722 or 935176577:
+    user_id = str(message.from_user.id)
+    allowed_user_id = ['5034422722','935176577']
+    admin_password = 'Wn_90090'
+    if user_id  in allowed_user_id:
         bot.send_message(chat_id, "Привет, админ. ")
         keyboard = telebot.types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
         button = telebot.types.KeyboardButton('Добавить заказ')
@@ -47,7 +49,22 @@ def handle_admin(message):
         keyboard.add(button,btn,button3)
         bot.send_message(message.chat.id,'Выберите действие',reply_markup=keyboard)
     else:
-        bot.send_message(chat_id, "У вас нет прав администратора!")
+       bot.send_message(chat_id,'Для доступа в панель администрации введите пароль..')
+       bot.register_next_step_handler(message,password_check,admin_password)
+def password_check(message,admin_password):
+    chat_id = message.chat.id
+    password_attempt = message.text.strip()
+    if password_attempt == admin_password:
+        bot.send_message(chat_id, "Привет, админ. ")
+        keyboard = telebot.types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
+        button = telebot.types.KeyboardButton('Добавить заказ')
+        btn = telebot.types.KeyboardButton('Сменить курс')
+        button3 = telebot.types.KeyboardButton('Вернуться в главное меню')
+        keyboard.add(button,btn,button3)
+        bot.send_message(message.chat.id,'Выберите действие',reply_markup=keyboard)
+    else:
+        bot.send_message(chat_id,"Пароль неверный!")
+
 
 def course_change(message):
     cur=bot.send_message(message.chat.id, "Введите новое значение курса: ")
