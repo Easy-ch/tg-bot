@@ -1,7 +1,7 @@
 import telebot
 import math
 course = 0
-token='6430079230:AAEDudbAk8MZfHUKhILZGv6i0TfKZd_EFXs'
+token='6430079230:AAFsUttq_f1RqqFe2Z6N9B7f7asrV5uUUt8'
 bot=telebot.TeleBot(token)
 
 
