@@ -10,7 +10,7 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         time.sleep(2)
-        bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
+        bot.set_webhook('https://bbbb-alpha.vercel.app/')
         self.send_response(200)
         self.end_headers()
 
