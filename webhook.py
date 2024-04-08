@@ -2,7 +2,6 @@ import json
 import os
 import time
 from http.server import BaseHTTPRequestHandler
-import threading
 from telebot import types
 from main import bot
 
@@ -19,10 +18,6 @@ class handler(BaseHTTPRequestHandler):
         cl = int(self.headers['Content-Length'])
         post_data = self.rfile.read(cl)
         body = json.loads(post_data.decode())
-
-        # Создаем новый поток для обработки сообщения
-        message_thread = threading.Thread(target=self.process_message, args=(body,))
-        message_thread.start()
 
         self.send_response(204)
         self.end_headers()
