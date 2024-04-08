@@ -19,6 +19,8 @@ class handler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(cl)
         body = json.loads(post_data.decode())
 
+        self.process_message(body)  # Вызов метода для обработки сообщения
+
         self.send_response(204)
         self.end_headers()
 
