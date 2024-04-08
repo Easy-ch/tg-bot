@@ -4,15 +4,17 @@ import time
 from http.server import BaseHTTPRequestHandler
 from telebot import types
 from main import bot
-
+from os.path import join
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
-
     def do_GET(self):
-        time.sleep(2)
-        bot.set_webhook('https://' + os.environ['VERCEL_URL'])
         self.send_response(200)
+        self.send_header('Content-type','text/plain')
         self.end_headers()
+        with open(join('data', 'file.txt'), 'r') as file:
+          for line in file:
+            self.wfile.write(line.encode())
+        return
 
     def do_POST(self):
         cl = int(self.headers['Content-Length'])
