@@ -1,8 +1,17 @@
 import telebot
 import math
+import asyncio
+import websockets
 course = 0
 token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
 bot=telebot.TeleBot(token)
+async def connect_to_server():
+    async with websockets.connect("ws://localhost:8765") as websocket:
+        await websocket.send("Hello, Server!")
+        response = await websocket.recv()
+        print(f"Received: {response}")
+
+asyncio.get_event_loop().run_until_complete(connect_to_server())
 
 
 @bot.message_handler(commands=['start'])
