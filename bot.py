@@ -4,7 +4,7 @@ from flask import Flask, request
 course = 0
 token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
 bot=telebot.TeleBot(token)
-URL = "vercel.com/easys-projects/bbbb"
+URL = "vercel.com/easys-projects/"
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
