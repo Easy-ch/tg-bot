@@ -1,18 +1,23 @@
-from fastapi import FastAPI
+from flask import Flask, reques
+app = Flask(__name__)
 
-# Инициализация FastAPI приложения
-app = FastAPI()
 
-# Проверка работоспособности сервера
-@app.get("/")
-async def root():
-    """
-    Корневой обработчик для проверки работоспособности сервера.
-    """
-    return {"status": "OK"}
+@app.route('/')
+def index():
+    return 'Hello World!'
 
-# Запуск сервера
-if __name__ == "__main__":
-    import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+@app.route('/{}'.format(TOKEN), methods=['GET', 'POST'])
+def respond():
+    update = Update.de_json(request.get_json(force=True), bot)
+    setup().process_update(update)
+    return 'ok'
+
+
+@app.route('/setwebhook', methods=['GET', 'POST'])
+def set_webhook():
+    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=TOKEN))
+    if s:
+        return "webhook setup ok"
+    else:
+        return "webhook setup failed"
