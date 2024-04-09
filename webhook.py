@@ -4,16 +4,6 @@ import time
 from http.server import BaseHTTPRequestHandler
 from telebot import types
 from main import bot
-import asyncio
-import websockets
-async def connect_to_server():
-    async with websockets.connect("ws://localhost:8765") as websocket:
-        await websocket.send("Hello, Server!")
-        response = await websocket.recv()
-        print(f"Received: {response}")
-
-asyncio.get_event_loop().run_until_complete(connect_to_server())
-
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
 
