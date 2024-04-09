@@ -1,9 +1,10 @@
 import telebot
 import math
+from flask import Flask, request
 course = 0
 token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
 bot=telebot.TeleBot(token)
-
+URL = "vercel.com/easys-projects/bbbb"
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -137,3 +138,25 @@ def user(message):
        send_welcome(message)
     elif message.text == 'Сменить курс':
         course_change(message)
+        
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'Hello World!'
+
+
+@app.route('/{}'.format(token), methods=['GET', 'POST'])
+def respond():
+    update = Update.de_json(request.get_json(force=True), bot)
+    setup().process_update(update)
+    return 'ok'
+
+
+@app.route('/setwebhook', methods=['GET', 'POST'])
+def set_webhook():
+    s = bot.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=token))
+    if s:
+        return "webhook setup ok"
+    else:
+        return "webhook setup failed"
