@@ -4,6 +4,7 @@ import time
 from http.server import BaseHTTPRequestHandler
 from telebot import types
 from main import bot
+from .config import VERCEL_URL
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
 
