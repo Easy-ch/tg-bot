@@ -1,27 +1,21 @@
-import json
-import os
-import time
-from http.server import BaseHTTPRequestHandler
-from telebot import types
-from main import bot
-class handler(BaseHTTPRequestHandler):
-    server_version = 'WebhookHandler/1.0'
+from bot import bot
+from fastapi import FastAPI
 
-    def do_GET(self):
-        time.sleep(2)
-        bot.set_webhook('https://' + os.environ['VERCEL_URL'])
-        self.send_response(200)
-        self.end_headers()
+# Инициализация FastAPI приложения
+app = FastAPI()
 
-    def do_POST(self):
-        cl = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(cl)
-        body = json.loads(post_data.decode())
+# Устанавливаем вебхук для обработки входящих сообщений
+WEBHOOK_URL_PATH = "/bbbb"
+WEBHOOK_URL_BASE = f"https://vercel.com/easys-projects/{WEBHOOK_URL_PATH}"
+bot.remove_webhook()
+bot.set_webhook(url=WEBHOOK_URL_BASE)
 
-        self.process_message(body)  # Вызов метода для обработки сообщения
-
-        self.send_response(204)
-        self.end_headers()
-
-    def process_message(self, body):
-        bot.process_new_updates([types.Update.de_json(body)])
+# Обработчик вебхука для FastAPI
+@app.post(WEBHOOK_URL_PATH)
+async def handle_webhook(request: Request):
+    """
+    Обработчик вебхука для FastAPI.
+    """
+    update = await request.json()
+    bot.process_new_updates([telebot.types.Update.de_json(update)])
+    return {"ok": True}
