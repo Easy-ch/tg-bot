@@ -2,7 +2,7 @@ from flask import Flask, request
 from bot import bot
 from telegram import Update,Bot
 
-URL = "https://bbbb-alpha.vercel.app"
+URL = "bbbb-alpha.vercel.app"
 TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
 app = Flask(__name__)
 
