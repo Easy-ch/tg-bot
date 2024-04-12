@@ -2,7 +2,7 @@ from flask import Flask, request
 from bot import bot
 from telegram import Update,Bot
 bot.delete_webhook()
-URL = "https://vercel.com/easys-projects/bbbb"
+URL = "https://vercel.com/easys-projects/"
 TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
 app = Flask(__name__)
 
