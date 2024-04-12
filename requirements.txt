@@ -3,7 +3,6 @@ certifi
 charset-normalizer
 exceptiongroup
 h11
-httpcor
 httpx
 idna
 MarkupSafe
