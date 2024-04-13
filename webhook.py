@@ -11,7 +11,7 @@ apihelper.proxy = {'http':'https://88.204.154.155:8080'}
 def index():
     return 'Hello World!'
 
-@app.route('/{}'.format(TOKEN), methods=['POST'])
+@app.route('/'.format(TOKEN), methods=['POST'])
 def respond():
     update = Update.de_json(request.get_json(force=True), bot)
     bot.process_update(update)
