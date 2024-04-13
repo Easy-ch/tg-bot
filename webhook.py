@@ -3,7 +3,7 @@ from bot import bot
 from telegram import Update, Bot
 
 URL = "https://vercel.com/easys-projects/"
-TOKEN = ""
+TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
 
 app = Flask(__name__)
 
