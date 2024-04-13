@@ -1,9 +1,12 @@
 from flask import Flask, request
 from bot import bot
-from telegram import Update,Bot
+from telegram import Update, Bot
 
-URL = "vercel.com/bbbb/easys-projects/"
-TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
+bot.delete_webhook()
+
+URL = "https://vercel.com/easys-projects/"
+TOKEN = ""
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -24,3 +27,13 @@ def set_webhook():
         return "webhook setup ok"
     else:
         return "webhook setup failed"
+
+# Добавляем маршрут для обработки POST запросов на /TOKEN
+@app.route(f'/{TOKEN}', methods=['POST'])
+def webhook():
+    update = Update.de_json(request.json, bot)
+    bot.process_update(update)
+    return 'ok'
+
+if __name__ == '__main__':
+    app.run(debug=True)
