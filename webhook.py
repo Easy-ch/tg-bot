@@ -1,12 +1,12 @@
 from flask import Flask, request
 from bot import bot
 from telegram import Update, Bot
-from telebot import apihelper
+
 URL = "https://bbbb-alpha.vercel.app/"
 TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
 
 app = Flask(__name__)
-apihelper.proxy = {'http':'https://88.204.154.155:8080'}
+
 @app.route('/')
 def index():
     return 'Hello World!'
