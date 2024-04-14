@@ -10,15 +10,14 @@ from bot import bot
 
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
-    def do_HEAD(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
     def do_GET(self):
-        time.sleep(2)
-        bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
-        self.send_response(200)
-        self.end_headers()
+        try:
+            time.sleep(2)
+            bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
+            self.send_response(200)
+            self.end_headers()
+        finally:
+            pass
 
     def do_POST(self):
         cl = int(self.headers.get('Content-Length',0))
@@ -29,4 +28,3 @@ class handler(BaseHTTPRequestHandler):
 
         self.send_response(204)
         self.end_headers()
-
