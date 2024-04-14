@@ -27,7 +27,6 @@ class handler(SimpleHTTPRequestHandler):
             self.end_headers()
         except Exception as e:
             print(e)
-my_handler = handler()
 
 # Функция, которая будет вызываться Vercel при обработке запросов
 def vercel_handler(request):
@@ -41,5 +40,5 @@ def vercel_handler(request):
 if __name__ == '__main__':
     from http.server import HTTPServer
     import os
-    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 5000))), my_handler)
+    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 5000))))
     server.serve_forever()
