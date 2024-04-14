@@ -1,5 +1,2 @@
 pyTelegramBotAPI
-python-telegram-bot
-requests
-Flask
-asgiref
+
