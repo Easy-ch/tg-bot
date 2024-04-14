@@ -1,31 +1,41 @@
-import json
+import telebot
+from flask import Flask, request
 import os
-import time
-from http.server import BaseHTTPRequestHandler
+# Инициализация бота
+token = '6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
+bot = telebot.TeleBot(token)
 
-from telebot import types
-from bot import bot
+# Создание Flask-приложения
+app = Flask(__name__)
 
-class handler(BaseHTTPRequestHandler):
-    server_version = 'WebhookHandler/1.0'
+# Установка вебхука
+@app.route('/webhook', methods=['POST'])
+def webhook_handler():
+    if request.method == "POST":
+        update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
+        bot.process_new_updates([update])
+        return '', 200
 
-    def do_GET(self):
-        try:
-            time.sleep(2)
-            bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
-            self.send_response(200)
-            self.end_headers()
-        except Exception as e:
-            print(e)
+# Обработчики команд и сообщений
+@bot.message_handler(commands=['start'])
+def start_message(message):
+    bot.send_message(message.chat.id, 'Привет, это бот!')
 
-    def do_POST(self):
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            body = json.loads(post_data.decode('utf-8'))
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, message.text)
 
-            bot.process_new_updates([types.Update.de_json(body)])
-            self.send_response(200)
-            self.end_headers()
-        except Exception as e:
-            print(e)
+# Удаление вебхука
+@app.route('/remove_webhook', methods=['GET'])
+def remove_webhook():
+    bot.remove_webhook()
+    return 'Webhook removed', 200
+
+# Установка вебхука
+@app.route('/set_webhook', methods=['GET'])
+def set_webhook():
+    bot.set_webhook(url='https://bbbb-alpha.vercel.app/webhook')
+    return 'Webhook set', 200
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
