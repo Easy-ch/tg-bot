@@ -1,4 +1,3 @@
-
 import telebot
 import math
 course = 0
