@@ -1,41 +1,31 @@
-import telebot
-from flask import Flask, request
+import json
 import os
-# Инициализация бота
-token = '6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
-bot = telebot.TeleBot(token)
+import time
+from http.server import BaseHTTPRequestHandler
 
-# Создание Flask-приложения
-app = Flask(__name__)
+from telebot import types
 
-# Установка вебхука
-@app.route('/webhook', methods=['POST'])
-def webhook_handler():
-    if request.method == "POST":
-        update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
-        bot.process_new_updates([update])
-        return '', 200
+from bot import bot
 
-# Обработчики команд и сообщений
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(message.chat.id, 'Привет, это бот!')
 
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
+class handler(BaseHTTPRequestHandler):
+    server_version = 'WebhookHandler/1.0'
+    def do_GET(self):
+        try:
+            time.sleep(2)
+            bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
+            self.send_response(200)
+            self.end_headers()
+        finally:
+            pass
 
-# Удаление вебхука
-@app.route('/remove_webhook', methods=['GET'])
-def remove_webhook():
-    bot.remove_webhook()
-    return 'Webhook removed', 200
+    def do_POST(self):
+        cl = int(self.headers.get('Content-Length',0))
+        post_data = self.rfile.read(cl)
+        body = json.loads(post_data.decode())
 
-# Установка вебхука
-@app.route('/set_webhook', methods=['GET'])
-def set_webhook():
-    bot.set_webhook(url='https://bbbb-alpha.vercel.app/webhook')
-    return 'Webhook set', 200
+        bot.process_new_updates([types.Update.de_json(body)])
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+        self.send_response(204)
+        self.end_headers()
+
