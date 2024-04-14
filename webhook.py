@@ -1,10 +1,10 @@
 import json
-from http.server import BaseHTTPRequestHandler
+from http.server import SimpleHTTPRequestHandler
 
 from telebot import types
 from bot import bot  # Подключаем вашего бота из другого файла
 
-class handler(BaseHTTPRequestHandler):
+class handler(SimpleHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
 
     def do_GET(self):
