@@ -1,35 +1,31 @@
-from flask import Flask, request
-from bot import bot
-from telegram import Update, Bot
+import json
+import os
+import time
+from http.server import BaseHTTPRequestHandler
 
-URL = "https://bbbb-alpha.vercel.app/"
-TOKEN = "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
+from telebot import types
 
-app = Flask(__name__)
+from main import bot
 
-@app.route('/')
-def index():
-    return 'Hello World!'
 
-@app.route('/'.format(TOKEN), methods=['POST'])
-def respond():
-    update = Update.de_json(request.get_json(force=True), bot)
-    bot.process_update(update)
-    return 'ok'
+class handler(BaseHTTPRequestHandler):
+    server_version = 'WebhookHandler/1.0'
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+    def do_GET(self):
+        bot.set_webhook('https://' + 'bbbb-alpha.vercel.app/')
+        self.send_response(200)
+        self.end_headers()
 
-@app.route('/setwebhook', methods=['GET', 'POST'])
-async def set_webhook():
-    bot_instance = Bot(TOKEN)
-    s = await bot_instance.setWebhook('{URL}/{HOOK}'.format(URL=URL, HOOK=TOKEN))
-    if s:
-        return "webhook setup ok"
-    else:
-        return "webhook setup failed"
+    def do_POST(self):
+        cl = int(self.headers.get('Content-Length',0))
+        post_data = self.rfile.read(cl)
+        body = json.loads(post_data.decode())
 
-# Добавляем маршрут для обработки POST запросов на /TOKEN
-@app.route(f'/{TOKEN}', methods=['POST'])
-def webhook():
-    update = Update.de_json(request.json, bot)
-    bot.process_update(update)
-    return 'ok'
+        bot.process_new_updates([types.Update.de_json(body)])
+
+        self.send_response(204)
+        self.end_headers()
 
