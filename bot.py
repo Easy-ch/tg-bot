@@ -1,6 +1,5 @@
 import telebot
 import math
-import requests
 course = 0
 token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
 bot=telebot.TeleBot(token)
