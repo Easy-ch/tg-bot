@@ -3,6 +3,8 @@ import math
 import requests
 course = 0
 token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
+server_url = "https://bbbb-alpha.vercel.app"
+update_interval = 120
 bot=telebot.TeleBot(token)
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -137,8 +139,6 @@ def user(message):
        send_welcome(message)
     elif message.text == 'Сменить курс':
         course_change(message)
-        server_url = "https://bbbb-alpha.vercel.app"
-update_interval = 120
 def update_server():
     try:
         response = requests.get(server_url)
