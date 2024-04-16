@@ -15,6 +15,10 @@ def update_server():
             print(f"Ошибка при обновлении страницы. Код состояния: {response.status_code}")
     except Exception as e:
         print(f"Ошибка при попытке обновления страницы: {str(e)}")
+if __name__ == "__main__":
+    while True:
+        update_server()
+        time.sleep(update_interval)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -150,7 +154,4 @@ def user(message):
     elif message.text == 'Сменить курс':
         course_change(message)
 
-if __name__ == "__main__":
-    while True:
-        update_server()
-        time.sleep(update_interval)
+
