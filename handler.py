@@ -4,7 +4,6 @@ token='6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw'
 bot=telebot.TeleBot(token)
 course = 0
 import math
-bot.delete_webhook()
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -94,4 +93,3 @@ def feedback(message):
 Написать свой отзыв вы сможете по ссылке ниже, просто напишите сообщение на этот аккаунт со своим мнением о работе сервиса и мы обязательно его выложим в наш канал с отзывами - https://t.me/wnmarketfeedback
 """
     bot.send_message(message.chat.id,text)   
-bot.polling()
