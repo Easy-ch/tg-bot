@@ -10,7 +10,7 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             # Устанавливаем вебхук при получении GET-запроса
-            bot.set_webhook('https://' + 'bbbb-alpha.vercel.app')
+            bot.set_webhook('https://bbbb-alpha.vercel.app')
             self.send_response(200)
             self.end_headers()
         except Exception as e:
