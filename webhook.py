@@ -27,15 +27,13 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
         except Exception as e:
             print(e)
-my_handler = handler()
 
-# Функция, которая будет вызываться Vercel при обработке запросов
 def vercel_handler(request):
     # Вызываем методы обработки запросов вручную
     if request.method == 'POST':
-        my_handler.do_POST(request)
+        handler.do_POST(request)
     elif request.method == 'GET':
-        my_handler.do_GET(request)
+        handler.do_GET(request)
 
 # Это необходимо для корректной работы Vercel
 if __name__ == '__main__':
