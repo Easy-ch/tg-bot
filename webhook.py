@@ -15,7 +15,6 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
         except Exception as e:
             print(e)
-    time.sleep(5)
     def do_POST(self):
         try:
             # Обрабатываем POST-запросы (входящие обновления от Telegram)
