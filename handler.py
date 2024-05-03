@@ -79,7 +79,7 @@ def answer(message):
 
 @bot.message_handler(func=lambda message: message.text =='Сделать заказ')
 def make_delivery(message):
-    video_gaid = open('gaid_video.mp4','rb')
+    video_gaid = open('video_gaid.mp4','rb')
     bot.send_video(message.chat.id,video_gaid)
     bot.send_message(message.chat.id,""" Сделать заказ
 Заказ можно оформить через телеграм-аккаунт Прием заказов wnmarket.
