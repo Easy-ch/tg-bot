@@ -1,12 +1,12 @@
 import json
 from http.server import BaseHTTPRequestHandler
-
+import time 
 from telebot import types
 from handler import bot  # Подключаем вашего бота из другого файла
 
 class handler(BaseHTTPRequestHandler):
     server_version = 'WebhookHandler/1.0'
-
+    time.sleep(5)
     def do_GET(self):
         try:
             # Устанавливаем вебхук при получении GET-запроса
@@ -27,17 +27,3 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
         except Exception as e:
             print(e)
-
-def vercel_handler(request):
-    # Вызываем методы обработки запросов вручную
-    if request.method == 'POST':
-        handler.do_POST(request)
-    elif request.method == 'GET':
-        handler.do_GET(request)
-
-# Это необходимо для корректной работы Vercel
-if __name__ == '__main__':
-    from http.server import HTTPServer
-    import os
-    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 5000))),handler())
-    server.serve_forever()
