@@ -39,5 +39,5 @@ def vercel_handler(request):
 if __name__ == '__main__':
     from http.server import HTTPServer
     import os
-    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 5000))),handler()
+    server = HTTPServer(('0.0.0.0', int(os.environ.get('PORT', 5000))),handler())
     server.serve_forever()
