@@ -23,11 +23,9 @@ TOKEN = str(os.getenv('TOKEN'))
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 course = 0
-async def deleteweb(bot:Bot):
-    await bot.delete_webhook()
+
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-    await deleteweb(bot)
     await dp.start_polling(bot)
 
 @dp.message(CommandStart())
