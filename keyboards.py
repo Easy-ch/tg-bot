@@ -1,23 +1,63 @@
-from telebot import types
-class KeyBoards:
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+
+class Keyboards:
     @staticmethod
     def admin_keyboard():
-        keyboard = types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
-        keyboard.add('Добавить заказ','Сменить курс','Вернуться в главное меню')
+        keyboard = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text='Добавить заказ'), 
+                    KeyboardButton(text='Сменить курс')
+                ], 
+                [
+                    KeyboardButton(text='Вернуться в главное меню')
+                ]
+            ], 
+            resize_keyboard=True,
+            one_time_keyboard=False,
+        )
         return keyboard
+
     @staticmethod
     def start_keyboard():
-        keyboard =types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
-        keyboard.add('Рассчитать стоимость товара','FAQ','Какой текущий курс юаня?','Сделать заказ','Написать отзыв')
+        keyboard = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text='Рассчитать стоимость товара'), 
+                    KeyboardButton(text='Какой текущий курс юаня?'),
+                ],
+                [
+                    KeyboardButton(text='FAQ'), 
+                    KeyboardButton(text='Сделать заказ'), 
+                    KeyboardButton(text='Написать отзыв')
+                ]
+            ], 
+            resize_keyboard=True
+        )
         return keyboard 
+
     @staticmethod
     def keyboard_cost():
-        keyboard =types.ReplyKeyboardMarkup(row_width=2,resize_keyboard=True,one_time_keyboard=False)
-        keyboard.add('Обувь','Вернуться в главное меню')
-        # ,'Одежда','Техника',
+        keyboard = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text='Обувь'), 
+                    KeyboardButton(text='Вернуться в главное меню')
+                ]
+            ], 
+            resize_keyboard=True
+        )
         return keyboard
+
     @staticmethod
     def keyboard_Faq():
-        keyboard =types.ReplyKeyboardMarkup(row_width=1,resize_keyboard=True,one_time_keyboard=False)
-        keyboard.add('Каковы сроки доставки?','Вернуться в главное меню')
+        keyboard = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text='Каковы сроки доставки?'), 
+                    KeyboardButton(text='Вернуться в главное меню')
+                ]
+            ], 
+            resize_keyboard=True
+        )
         return keyboard 
