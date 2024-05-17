@@ -105,8 +105,6 @@ async def echo_handler(message:types.Message) -> None:
         except TypeError:
             await message.answer("Nice try!")
 
-    # And the run events dispatching
-        await dp.start_polling()
 
 
     
