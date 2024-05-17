@@ -104,7 +104,11 @@ async def echo_handler(message:types.Message) -> None:
             await message.copy_to(chat_id=message.chat.id)
         except TypeError:
             await message.answer("Nice try!")
+        await dp.start_polling()
 
+if __name__ == "__main__":
+    logging.basicConfig( stream=sys.stdout)
+    asyncio.run(main())
 
 
     
