@@ -108,7 +108,5 @@ async def echo_handler(message:types.Message) -> None:
     # And the run events dispatching
         await dp.start_polling()
 
-if __name__ == "__main__":
-    logging.basicConfig( stream=sys.stdout)
-    asyncio.run(main())
+
     
