@@ -52,7 +52,7 @@ app = web.Application()
 SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
 setup_application(app, dp, bot=bot)
 
-handler = Mangum(app)
+handler = Mangum(app,lifespan="off")
 
 if __name__ == '__main__':
     web.run_app(app)
