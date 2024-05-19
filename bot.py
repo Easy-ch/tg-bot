@@ -23,15 +23,17 @@ TOKEN = str(os.getenv('TOKEN'))
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
 course = 0
-
+async def deleteweb(bot:Bot):
+    await bot.delete_webhook()
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
+    await deleteweb(bot)
     await dp.start_polling(bot)
 
 @dp.message(CommandStart())
 async def command_start_handler(message:types.Message) -> None:
     await message.answer(messages['welcome_text'],reply_markup= Keyboards.start_keyboard())
-    if message.from_user.id == int(os.getenv('ADMIN_ID')):
+    if message.from_user.id == int(os.getenv('ADMIN_ID')) :
         await message.answer('Вы зарегестрировались как админ',reply_markup=Keyboards.admin_keyboard())
 
 @dp.message(lambda c: c.text == 'Рассчитать стоимость товара')
@@ -64,7 +66,7 @@ async def course_change(message:types.Message):
     
 @dp.message(lambda message: 'Setcourse='in message.text)
 async def change(message:types.Message):
-    if message.from_user.id == int(os.getenv('ADMIN_ID')):
+    if message.from_user.id == int('5034422722'):
         global course
         value = message.text.split('=', 1)[1].strip()
         course = float(value.replace(',','.'))
@@ -104,11 +106,18 @@ async def echo_handler(message:types.Message) -> None:
             await message.copy_to(chat_id=message.chat.id)
         except TypeError:
             await message.answer("Nice try!")
-        await dp.start_polling()
 
-if __name__ == "__main__":
-    logging.basicConfig( stream=sys.stdout)
-    asyncio.run(main())
-
-
-    
+def register_handlers(dp: Dispatcher):
+    dp.message.register(command_start_handler, CommandStart())
+    dp.message.register(change_category, lambda c: c.text == 'Рассчитать стоимость товара')
+    dp.message.register(photo, lambda c: c.text == 'Обувь')
+    dp.message.register(main_menu, lambda c: c.text == 'Вернуться в главное меню')
+    dp.message.register(calculation, lambda message: message.text.isdigit())
+    dp.message.register(course_change, lambda msg: msg.text == 'Сменить курс')
+    dp.message.register(change, lambda message: 'Setcourse=' in message.text)
+    dp.message.register(course_info, lambda msg: msg.text == 'Какой текущий курс юаня?')
+    dp.message.register(make_delivery, lambda msg: msg.text == 'Сделать заказ')
+    dp.message.register(feedback, lambda msg: msg.text == 'Написать отзыв')
+    dp.message.register(faq, lambda msg: msg.text == 'FAQ')
+    dp.message.register(faq_answer, lambda msg: msg.text == 'Каковы сроки доставки?')
+    dp.message.register(valid)
