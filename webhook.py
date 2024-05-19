@@ -8,7 +8,7 @@ import os
 from mangum import Mangum
 from dotenv import load_dotenv
 from bot import register_handlers
-from langchain.callbacks.async_handler import AsyncCallbackHandler
+
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # webhook settings
