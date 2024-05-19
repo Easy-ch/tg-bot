@@ -48,7 +48,7 @@ async def echo(message: types.Message):
     await message.answer(message.text)
 
 app = web.Application()
-SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
+SimpleRequestHandler(dispatcher=dp, bot=bot).register(app)
 setup_application(app, dp, bot=bot)
 
 handler = Mangum(app,lifespan="off")
