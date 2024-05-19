@@ -5,6 +5,7 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 import os
+from mangum import Mangum
 from dotenv import load_dotenv
 from bot import register_handlers
 
