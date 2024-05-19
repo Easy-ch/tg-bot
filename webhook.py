@@ -13,7 +13,8 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # webhook settings
 WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
-WEBHOOK_URL = f"{WEBHOOK_HOST}"
+WEBHOOK_PATH = '/webhook'
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 bot = Bot(TOKEN)
 
 
@@ -48,7 +49,7 @@ async def echo(message: types.Message):
     await message.answer(message.text)
 
 app = web.Application()
-SimpleRequestHandler(dispatcher=dp, bot=bot).register(app)
+SimpleRequestHandler(dispatcher=dp, bot=bot).register(app,path=WEBHOOK_PATH)
 setup_application(app, dp, bot=bot)
 
 handler = Mangum(app,lifespan="off")
