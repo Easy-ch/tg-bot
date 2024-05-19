@@ -5,7 +5,6 @@ from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_applicati
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 import os
-from mangum import Mangum
 from dotenv import load_dotenv
 from bot import register_handlers
 
@@ -51,8 +50,6 @@ async def echo(message: types.Message):
 app = web.Application()
 SimpleRequestHandler(dispatcher=dp, bot=bot).register(app,path=WEBHOOK_PATH)
 setup_application(app, dp, bot=bot)
-
-handler = Mangum(app)
 
 if __name__ == '__main__':
     web.run_app(app)
