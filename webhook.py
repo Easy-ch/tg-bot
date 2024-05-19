@@ -13,8 +13,7 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # webhook settings
 WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
-WEBHOOK_PATH = '/webhook'
-WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+WEBHOOK_URL = f"{WEBHOOK_HOST}"
 bot = Bot(TOKEN)
 
 
