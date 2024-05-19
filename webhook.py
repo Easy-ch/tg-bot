@@ -11,13 +11,11 @@ from bot import register_handlers
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # webhook settings
-WEBHOOK_HOST = 'https://1385-188-243-182-2.ngrok-free.app'
+WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 bot = Bot(TOKEN)
-# webserver settings
-WEBAPP_HOST = '127.0.0.1'  # or ip
-WEBAPP_PORT = 80
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -54,4 +52,4 @@ SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
 setup_application(app, dp, bot=bot)
 
 if __name__ == '__main__':
-    web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
+    web.run_app(app)
