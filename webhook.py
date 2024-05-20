@@ -7,7 +7,7 @@ from aiohttp import web
 import os
 from dotenv import load_dotenv
 from bot import register_handlers
-
+from mangum import Mangum
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # webhook settings
@@ -50,6 +50,8 @@ async def echo(message: types.Message):
 app = web.Application()
 SimpleRequestHandler(dispatcher=dp, bot=bot).register(app,path=WEBHOOK_PATH)
 setup_application(app, dp, bot=bot)
+
+handler = Mangum(app, lifespan="off")
 
 if __name__ == '__main__':
     web.run_app(app)
