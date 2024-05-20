@@ -1,5 +1,5 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-class Keyboards():
+class Keyboards:
     @staticmethod
     def admin_keyboard():
         keyboard = ReplyKeyboardMarkup(
