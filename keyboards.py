@@ -1,6 +1,6 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-
-class Keyboards:
+from pydantic import BaseModel
+class Keyboards(BaseModel):
     @staticmethod
     def admin_keyboard():
         keyboard = ReplyKeyboardMarkup(
