@@ -31,7 +31,7 @@ async def bot_webhook(request: Request):
 @app.on_event("shutdown")
 async def on_shutdown():
     await bot.session.close()
-@app.get("/")
+@app.get("/webhook")
 async def root():
     return {"message": "Bot webhook is running"}
 if __name__ == "__main__":
