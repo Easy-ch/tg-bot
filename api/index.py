@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from aiogram import types, Dispatcher, Bot
-from bot import dp, bot
+from bot import dp, bot,register_handlers
 from dotenv import load_dotenv
 import os
 load_dotenv
+register_handlers()
 app = FastAPI()
 TOKEN = os.getenv('TOKEN')
 WEBHOOK_HOST = 'https://34ed-188-243-182-2.ngrok-free.app'
