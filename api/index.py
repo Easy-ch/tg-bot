@@ -34,3 +34,6 @@ async def on_shutdown():
 @app.get("/")
 async def root():
     return {"message": "Bot webhook is running"}
+if __name__ == "__main__":
+    from aiogram import executor
+    executor.start_polling(dp)
