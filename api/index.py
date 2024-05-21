@@ -4,7 +4,7 @@ from bot import dp, bot,register_handlers
 from dotenv import load_dotenv
 import os
 load_dotenv
-register_handlers()
+register_handlers(dp)
 app = FastAPI()
 TOKEN = os.getenv('TOKEN')
 WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
