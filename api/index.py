@@ -3,7 +3,7 @@ from aiogram import types, Dispatcher, Bot
 from bot import dp, bot,register_handlers
 from dotenv import load_dotenv
 import os
-load_dotenv
+load_dotenv()
 register_handlers(dp)
 app = FastAPI()
 TOKEN = os.getenv('TOKEN')
