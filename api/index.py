@@ -7,7 +7,7 @@ load_dotenv
 register_handlers()
 app = FastAPI()
 TOKEN = os.getenv('TOKEN')
-WEBHOOK_HOST = 'https://34ed-188-243-182-2.ngrok-free.app'
+WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
