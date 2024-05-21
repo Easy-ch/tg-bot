@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Requests
+from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from bot import dp, bot,register_handlers
 from dotenv import load_dotenv
