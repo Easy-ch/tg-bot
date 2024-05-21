@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Requests
 from aiogram import types, Dispatcher, Bot
 from bot import dp, bot,register_handlers
 from dotenv import load_dotenv
@@ -21,8 +21,8 @@ async def on_startup():
 
 
 @app.post(WEBHOOK_PATH)
-async def bot_webhook(update: dict):
-    telegram_update = types.Update(**update)
+async def bot_webhook(request: Request):
+    telegram_update = types.Update(await request.json())
     Dispatcher.set_current(dp)
     Bot.set_current(bot)
     await dp.process_update(telegram_update)
