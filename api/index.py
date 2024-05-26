@@ -9,7 +9,7 @@ load_dotenv()
 register_handlers(dp)
 
 API_TOKEN =os.getenv('TOKEN') 
-WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
+WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app'
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
