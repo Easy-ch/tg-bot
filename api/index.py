@@ -1,68 +1,33 @@
-from flask import Flask, request
-from aiogram import types,Bot,Dispatcher
-from bot import dp, bot,register_handlers
-from dotenv import load_dotenv
+import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiohttp import web
 import os
-import requests
-import asyncio
+from dotenv import load_dotenv
+from bot import register_handlers,bot,dp
 load_dotenv()
 register_handlers(dp)
-app = Flask(__name__)
-TOKEN = os.getenv('TOKEN')
-WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app/'
+
+API_TOKEN =os.getenv('TOKEN') 
+WEBHOOK_HOST = 'https://34e0-188-243-182-2.ngrok-free.app'
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
-# @app.on_event("startup")
-# async def on_startup():
-#     webhook_info = await bot.get_webhook_info()
-#     if webhook_info.url != WEBHOOK_URL:
+WEBAPP_HOST = '0.0.0.0'
+WEBAPP_PORT = 80
+
+logging.basicConfig(level=logging.INFO)
 
 
-# @app.post(WEBHOOK_PATH)
-# async def bot_webhook(request: Request):
-#     telegram_update = types.Update(await request.json())
-#     Dispatcher.set_current(dp)
-#     Bot.set_current(bot)
-#     await dp.process_update(telegram_update)
-@app.route(WEBHOOK_PATH, methods=['POST'])
-async def webhook():
-    update = request.get_json()
-    if not update:
-        return 'ПУСТОЙ!!!!!!!!!!!!', 404
-    # await dp.process_update(types.Update(**update))
-    Dispatcher.set_current(dp)
-    Bot.set_current(bot)
-    await dp.process_update(types.Update(**update))
-    return 'OK', 200
-# @app.on_event("shutdown")
-# async def on_shutdown():
-#     await bot.session.close(
-async def on_startup():
-    webhook_info = await bot.get_webhook_info()
-    if webhook_info.url != WEBHOOK_URL:
-        await bot.set_webhook(url=WEBHOOK_URL)
-        print("Webhook set successfully!")
-    else:
-        print("Webhook was already set")
+async def on_startup(app):
+    await bot.set_webhook(WEBHOOK_URL)
 
-async def on_shutdown():
-    await bot.session.close()
+async def on_shutdown(app):
+    await bot.delete_webhook()
 
-
-
-@app.get("/")
-async def root():
-    return {"message": "Bot webhook is running"}
+app = web.Application()
+app.router.add_route('POST', WEBHOOK_PATH, SimpleRequestHandler(dispatcher=dp, bot=bot))
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(on_startup())
-    response = requests.get(f'https://api.telegram.org/bot{TOKEN}/setWebhook?url={WEBHOOK_URL}')
-    if response.status_code == 200:
-        print("Webhook set successfully!")
-    else:
-        print("Failed to set webhook")
-    app.run(host='0.0.0.0',port = 80,debug=True)
-
-
+    setup_application(app, dp)
+    web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
