@@ -13,7 +13,7 @@ load_dotenv()
 register_handlers(dp)
 # Инициализация бота и диспетчера
 API_TOKEN = os.getenv('TOKEN')
-WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app'
+WEBHOOK_HOST = 'https://9819-188-243-182-2.ngrok-free.app'
 WEBHOOK_PATH = '/webhook'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
@@ -23,10 +23,10 @@ WEBAPP_PORT = 80  # Порт для запуска веб-приложения
 logging.basicConfig(level=logging.INFO)
 
 
-async def on_startup():
+async def on_startup(app):
     await bot.set_webhook(WEBHOOK_URL)
 
-async def on_shutdown():
+async def on_shutdown(app):
     logging.warning('Shutting down..')
     await bot.delete_webhook()
     await bot.session.close()
@@ -34,7 +34,7 @@ async def on_shutdown():
 
 async def handle(request):
     try:
-        update_json =await request.json()
+        update_json = await request.json()
         update = types.Update(**update_json)
         await dp.feed_update(bot,update)
         return web.Response(text="OK")
@@ -42,12 +42,13 @@ async def handle(request):
         logging.error(f"Failed to process update: {e}")
         return web.Response(status=500, text="Internal Server Error")
 
+app = web.Application()
+app.router.add_post(WEBHOOK_PATH, handle)
+
+app.on_startup.append(on_startup)
+app.on_shutdown.append(on_shutdown)
+
+setup_application(app, dp, bot=bot)
+
 if __name__ == '__main__':
-    app = web.Application()
-    app.router.add_post(WEBHOOK_PATH, handle)
-
-    dp.startup.register(on_startup)
-    dp.shutdown.register(on_shutdown)
-    setup_application(app, dp, bot=bot)
-
     web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
