@@ -50,5 +50,4 @@ async def on_shutdown():
     await bot.session.close()
 
 # Экспорт приложения для Vercel
-if __name__ == '__main__':
-    app=app
+app=app
