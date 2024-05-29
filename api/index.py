@@ -7,7 +7,7 @@ load_dotenv()
 register_handlers(dp)
 app = FastAPI()
 TOKEN = str(os.getenv('TOKEN'))
-WEBHOOK_PATH = f"/bot/{TOKEN}"
+WEBHOOK_PATH = "/webhook"
 WEBHOOK_URL = f"{'https://bbbb-alpha.vercel.app'}{WEBHOOK_PATH}"
 
 
