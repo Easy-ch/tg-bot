@@ -32,7 +32,9 @@ async def read_root():
 @app.post(WEBHOOK_PATH)
 async def bot_webhook(request: Request):
     try:
+        logger.info("Received a POST request")
         update = await request.json()
+        logger.info(f"Update received: {update}")
         telegram_update = types.Update(**update)
         Dispatcher.set_current(dp)
         Bot.set_current(bot)
