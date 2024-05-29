@@ -20,7 +20,7 @@ async def on_startup():
         )
 
 @app.get(WEBHOOK_PATH)
-async def get(/):
+async def get("/"):
     return {'Стартттт!'}
 
 
