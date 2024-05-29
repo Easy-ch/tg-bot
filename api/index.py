@@ -49,4 +49,5 @@ async def on_shutdown():
 
 # Экспорт приложения для Vercel
 if __name__ == '__main__':
-    app = app
+    import uvicorn  
+    uvicorn.run(app,host='0.0.0.0',port=80)
