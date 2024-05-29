@@ -4,7 +4,7 @@ from aiogram import types, Dispatcher, Bot
 from bot import dp, bot, register_handlers
 from dotenv import load_dotenv
 import os
-
+import asyncio
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -50,4 +50,13 @@ async def on_shutdown():
     await bot.session.close()
 
 # Экспорт приложения для Vercel
-app=app
+async def main():
+    await asyncio.gather(
+        app.startup(),
+        app.main(),
+        app.shutdown(),
+    )
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
