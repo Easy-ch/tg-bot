@@ -51,6 +51,9 @@ async def main_menu(message:types.Message):
 async def calculation(message:types.Message):
     try:
         global course
+        buy=float((message.text).replace(',',''))
+        count=math.floor(buy*course+1000)+1800
+        await message.answer(f' от {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
     except ValueError:
         await message.answer(messages['warning'])
 
@@ -62,6 +65,9 @@ async def course_change(message:types.Message):
 async def change(message:types.Message):
     if message.from_user.id == int('5034422722'):
         global course
+        value = message.text.split('=', 1)[1].strip()
+        course = float(value.replace(',','.'))
+        await message.answer(f'Новое значение курса: {course}')
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
