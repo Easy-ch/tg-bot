@@ -7,9 +7,8 @@ load_dotenv()
 register_handlers(dp)
 app = FastAPI()
 TOKEN = str(os.getenv('TOKEN'))
-WEBHOOK_PATH = "/"
-WEBHOOK_URL = "https://bbbb-alpha.vercel.app"
-
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
