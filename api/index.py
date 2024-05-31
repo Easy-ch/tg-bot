@@ -15,7 +15,7 @@ register_handlers(dp)
 
 app = FastAPI()
 TOKEN = str(os.getenv('TOKEN'))
-WEBHOOK_PATH = "/webhook"
+WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
@@ -50,15 +50,8 @@ async def on_shutdown():
     await bot.session.close()
 
 # Экспорт приложения для Vercel
-async def main():
-    print('FFFFFFF')
-    await asyncio.gather(
-        app.startup(),
-        app.main(),
-        app.shutdown(),
-        app.bot_webhook()
-    )
+
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run()
 
