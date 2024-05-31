@@ -51,6 +51,7 @@ async def on_shutdown():
 
 # Экспорт приложения для Vercel
 async def main():
+    print('FFFFFFF')
     await asyncio.gather(
         app.startup(),
         app.main(),
