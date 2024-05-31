@@ -2,27 +2,23 @@ import logging
 from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from bot import dp, bot, register_handlers
-from dotenv import load_dotenv
-import os
-import asyncio
+from config import TOKEN
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Загрузка переменных окружения из .env файла
-load_dotenv()
 register_handlers(dp)
 
 app = FastAPI()
-TOKEN = str(os.getenv('TOKEN'))
+
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://9336-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
     webhook_info = await bot.get_webhook_info()
-    if webhook_info.url != WEBHOOK_URL:
-        await bot.set_webhook(url=WEBHOOK_URL)
+    await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
 
 @app.get("/")
@@ -47,11 +43,9 @@ async def bot_webhook(request: Request):
 
 @app.on_event("shutdown")
 async def on_shutdown():
-    await bot.session.close()
+    await bot.session.close()   
 
 # Экспорт приложения для Vercel
 
-
-if __name__ == '__main__':
-    asyncio.run()
+    app=app
 
