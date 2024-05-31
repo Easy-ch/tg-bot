@@ -55,6 +55,7 @@ async def main():
         app.startup(),
         app.main(),
         app.shutdown(),
+        app.bot_webhook()
     )
 
 if __name__ == '__main__':
