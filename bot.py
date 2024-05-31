@@ -9,11 +9,9 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from keyboards import Keyboards
 from messages import messages
-from dotenv import load_dotenv
-
-load_dotenv()
+from config import TOKEN,ADMIN_ID
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = str(os.getenv('TOKEN'))
+
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 course = 0
@@ -30,7 +28,7 @@ async def main() -> None:
 @dp.message_handler(CommandStart())
 async def command_start_handler(message:types.Message) -> None:
     await message.answer(messages['welcome_text'],reply_markup= Keyboards.start_keyboard())
-    if message.from_user.id == int(os.getenv('ADMIN_ID')) :
+    if message.from_user.id == ADMIN_ID :
         await message.answer('Вы зарегестрировались как админ',reply_markup=Keyboards.admin_keyboard())
 
 @dp.message_handler(lambda c: c.text == 'Рассчитать стоимость товара')
@@ -63,7 +61,7 @@ async def course_change(message:types.Message):
 
 @dp.message_handler(lambda message: 'Setcourse='in message.text)
 async def change(message:types.Message):
-    if message.from_user.id == int('5034422722'):
+    if message.from_user.id == ADMIN_ID:
         global course
         value = message.text.split('=', 1)[1].strip()
         course = float(value.replace(',','.'))
