@@ -14,7 +14,7 @@ from config import TOKEN,ADMIN_ID
 
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
-course = 0
+course : float
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 dp.middleware.setup(LoggingMiddleware())
