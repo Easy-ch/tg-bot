@@ -18,11 +18,8 @@ course : float
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 dp.middleware.setup(LoggingMiddleware())
-async def deleteweb(bot:Bot):
-    await bot.delete_webhook()
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-    await deleteweb(bot)
     await dp.start_polling(bot)
 
 @dp.message_handler(CommandStart())
