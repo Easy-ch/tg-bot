@@ -20,7 +20,6 @@ dp.middleware.setup(LoggingMiddleware())
 
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
-    await deleteweb(bot)
     await dp.start_polling(bot)
 
 @dp.message_handler(CommandStart())
