@@ -14,7 +14,6 @@ from config import TOKEN,ADMIN_ID
 
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
-course : float
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 dp.middleware.setup(LoggingMiddleware())
@@ -48,7 +47,8 @@ async def main_menu(message:types.Message):
 @dp.message_handler(lambda message: message.text.isdigit())
 async def calculation(message:types.Message):
     try:
-        global course
+        with open ('course.txt',"r") as c:
+            course = float(c.read())
         buy=float((message.text).replace(',',''))
         count=math.floor(buy*course+1000)+1800
         await message.answer(f' от {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
@@ -62,15 +62,18 @@ async def course_change(message:types.Message):
 @dp.message_handler(lambda message: 'Setcourse='in message.text)
 async def change(message:types.Message):
     if message.from_user.id == int(ADMIN_ID):
-        global course
         value = message.text.split('=', 1)[1].strip()
         course = float(value.replace(',','.'))
+        with open ('course.txt',"w") as c:
+            c.write(str(course))
         await message.answer(f'Новое значение курса: {course}')
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
 @dp.message_handler(lambda msg: msg.text == 'Какой текущий курс юаня?')
 async def course_info(message:types.Message):
+    with open ('course.txt',"r") as c:
+        course = float(c.read())
     await message.answer(f'Текущий курс юаня {course} ₽')
 
 @dp.message_handler(lambda msg: msg.text == 'Сделать заказ')    
@@ -115,3 +118,6 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(faq, lambda msg: msg.text == 'FAQ')
     dp.register_message_handler(faq_answer, lambda msg: msg.text == 'Каковы сроки доставки?')
     dp.register_message_handler(valid)
+
+if '__main__'== __name__:
+    asyncio.run(main())

@@ -1,0 +1,276 @@
+//БИЛЕТ 20
+
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <ctime>
+using namespace std;
+int main(){
+    srand(time(0));
+    setlocale(0,"rus");
+    int A[7][7];
+    int x = 0;
+    int y = 0;
+    int num = A[0][0];
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = 0; j< 7; j++)
+        {
+            A[i][j] = rand()% 28-12;
+            cout<<setw(4)<<A[i][j];
+
+        }
+        cout<<endl;
+    }
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = 0; j < 7; j++)
+        {
+            if (A[i][j]>num)
+            {
+                num = A[i][j];
+                x = i+1;
+                y = j+1;
+            }
+
+        }
+
+    }
+    cout<<"Максимальный элемент массива "<<num<<endl;
+    cout<<"Строка: "<< x<<endl;
+    cout<<"Столбец: "<<y<<endl;
+
+system("pause>>void");
+return 0;
+}
+
+//БИЛЕТ 4(Задача 1)
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+using namespace std;
+int main(){
+    setlocale(0,"rus");
+    srand(time(0));
+    int A[20];
+    int min_num = A[1];
+    int x = 0;
+    for (int i = 0; i < 20; i++)
+    {
+        A[i] = rand()%301-100;
+        cout<<setw(4)<<A[i];
+    }
+    cout<<endl;
+    for (int j = 0; j < 20; j++)
+    {
+        if (min_num>A[j])
+        {
+            min_num = A[j];
+            x = j+1;
+
+        }
+
+    }
+    cout<<"Минимальный элемент массива: "<<min_num<<endl;
+    cout<<"Индекс(номер) минимального элемента массива: "<<x<<endl;
+    system("pause>>void");
+    return 0;
+}
+
+//Вариант 4 (Задача 2)
+
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int main(){
+    setlocale (0,"rus");
+    srand(time(0));
+    int A[3][3];
+
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            A[i][j] = rand()% -99+50;
+            cout<<setw(4)<<A[i][j];
+
+        }
+        cout<<endl;
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        float num = 0;
+        for (int j = 0; j < 3; j++)
+        {
+            num +=A[j][i];
+        }
+
+        cout<<"Среднее арифметическое стобца "<< i+1<<"="<<num/3<<endl;
+    }
+
+    system("pause>>void");
+    return 0;
+}
+
+//Вариант 32 (Задача 1)
+
+#include <iostream>
+#include <cstdlib>
+#include <iomanip>
+#include <ctime>
+using namespace std;
+int main(){
+    setlocale(0,"rus");
+    srand(time(0));
+    int A[10];
+    int prod = 1;
+    for (int i = 0; i < 10; i++)
+    {
+        A[i] = rand()% -49 + 50;
+        cout<<setw(4)<<A[i];
+    }
+    cout<<endl;
+    for (int i = 0; i < 10; i++)
+    {
+        if (A[i]%3==0 && A[i]%2==0)
+        {
+            prod*=A[i];
+        }
+    }
+    cout<<"Произведение четных чисел кратных 3: "<< prod<<endl;
+    system("pause>>void");
+    return 0;
+}
+
+//Вариант 32 (№2)
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>    
+using namespace std;
+
+int main() {
+    setlocale(0, "rus");
+    srand(time(NULL));
+    int M[5][5];
+
+    cout << "Задать двумерный массив произвольной размерности. Определить номера столбцов массива, не содержащих нулей." << endl;
+    cout << endl << "Исходный массив:" << endl;
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            M[i][j] = -12 + rand() % 28; // заполнение массива значениями в диапазоне [-12, 28]
+            cout << setw(4) << M[i][j];
+        }
+        cout << endl;
+    }
+
+    cout << endl << "Номера столбцов массива, не содержащих нулей: ";
+
+    for (int i = 0; i < 5; i++)
+    {
+        bool isNull = false;
+        for (int j = 0; j < 5; j++)
+        {
+            if (M[j][i] == 0)
+            {
+                isNull = true;
+            }
+        }
+
+        if (!isNull)
+        {
+            cout << i+1 << " ";
+        }
+    }
+    
+    system("pause>>void");
+    return 0;
+}
+
+
+//Вариант 11(Задача 1)
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int main()
+{
+    setlocale(0, "rus");
+    srand(time(0));
+    int A[15];
+    int count = 0;
+    cout << "Определить количество элементов, стоящих на местах кратных 3 и имеющих нечетные значение ";
+    for (int i = 0; i < 15; i++)
+    {
+        A[i] = -11 + rand() % 30;
+        cout << setw(4) << A[i];
+    }
+    cout << endl;
+
+    for (int i = 1; i < 15; i += 3)
+    {
+        if (A[i] % 2 != 0)
+        {
+            count += 1;
+        }
+    }
+
+    cout << "Количество элементов, стоящих на местах кратных 3 и имеющих нечетные значение " << count << endl;
+
+    system("pause>>void");
+    return 0;
+}
+
+
+//Вариант 11 (№2)
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>    
+using namespace std;
+
+int main() {
+    setlocale(0, "rus");
+    srand(time(NULL));
+    int M[5][5];
+
+    cout << "Задать двумерный числовой массив произвольной размерности. Найти сумму\nположительных элементов каждого столбца массива." << endl;
+    cout << endl << "Исходный массив:" << endl;
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 5; j++)
+        {
+            M[i][j] = -12 + rand() % 28; // заполнение массива значениями в диапазоне [-12, 28]
+            cout << setw(4) << M[i][j];
+        }
+        cout << endl;
+    }
+
+    cout << endl;
+
+    for (int i = 0; i < 5; i++)
+    {
+        int S = 0;
+        for (int j = 0; j < 5; j++)
+        {
+            if (M[j][i] > 0)
+                S += M[j][i];
+        }
+        cout << "Сумма положительных элементов в " << i+1 << " столбце массива:" << S << endl;
+    }
+    
+    system("pause>>void");
+    return 0;
+}
+
