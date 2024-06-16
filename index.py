@@ -46,4 +46,6 @@ async def on_shutdown():
     await bot.session.close()   
 
 # Экспорт приложения для Vercel
-app=app
+
+    app=app
+
