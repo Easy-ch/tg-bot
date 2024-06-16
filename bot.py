@@ -17,8 +17,11 @@ bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 dp.middleware.setup(LoggingMiddleware())
+async def deleteweb(bot:Bot):
+    await bot.delete_webhook()
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
+    await deleteweb(bot)
     await dp.start_polling(bot)
 
 @dp.message_handler(CommandStart())
@@ -115,4 +118,3 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(faq, lambda msg: msg.text == 'FAQ')
     dp.register_message_handler(faq_answer, lambda msg: msg.text == 'Каковы сроки доставки?')
     dp.register_message_handler(valid)
-
