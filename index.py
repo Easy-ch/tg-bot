@@ -13,7 +13,7 @@ register_handlers(dp)
 app = FastAPI()
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
@@ -29,17 +29,26 @@ async def read_root():
 async def bot_webhook(request: Request):
     try:
         logger.info("Received a POST request")
+        raw_data = await request.body()
+        logger.info(f"Raw request data: {raw_data}")
+
         update = await request.json()
         logger.info(f"Update received: {update}")
+
         telegram_update = types.Update(**update)
         Dispatcher.set_current(dp)
         Bot.set_current(bot)
+
+        if not telegram_update.message:
+            raise ValueError("Message is missing in the update")
+
         await dp.process_update(telegram_update)
         logger.info("Update processed successfully")
         return {"status": "ok"}
     except Exception as e:
         logger.error(f"Failed to process update: {e}")
         return {"status": "error", "message": str(e)}
+
 
 @app.on_event("shutdown")
 async def on_shutdown():
