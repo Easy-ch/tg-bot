@@ -1,4 +1,3 @@
-
 import logging
 from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
