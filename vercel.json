@@ -11,6 +11,6 @@
     { "src": "/(.*)", "dest": "/index.py" }
   ],
   "env": {
-    "DATABASE_URL": "DATABASE_URL"
+    "DATABASE_URL": "postgres://default:cNAgyo0j6JGl@ep-soft-snowflake-a4b3n145.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
   }
 }
