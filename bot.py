@@ -71,7 +71,7 @@ async def change(message:types.Message):
 
 @dp.message_handler(lambda msg: msg.text == 'Какой текущий курс юаня?')
 async def course_info(message:types.Message):
-    course = get_course()
+    course = await get_course()
     if course is not None:
         await message.answer(f'Текущий курс юаня {course} ₽')
     else: 
