@@ -1,6 +1,4 @@
-import asyncio
-import logging
-import os
+from db import get_course,set_course
 import math
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InputFile, ParseMode
@@ -47,8 +45,7 @@ async def main_menu(message:types.Message):
 @dp.message_handler(lambda message: message.text.isdigit())
 async def calculation(message:types.Message):
     try:
-        with open ('course.txt',"r") as c:
-            course = float(c.read())
+        course = await get_course()
         buy=float((message.text).replace(',',''))
         count=math.floor(buy*course+1000)+1800
         await message.answer(f' от {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
@@ -62,19 +59,23 @@ async def course_change(message:types.Message):
 @dp.message_handler(lambda message: 'Setcourse='in message.text)
 async def change(message:types.Message):
     if message.from_user.id == int(ADMIN_ID):
-        value = message.text.split('=', 1)[1].strip()
-        course = float(value.replace(',','.'))
-        with open ('course.txt',"w") as c:
-            c.write(str(course))
-        await message.answer(f'Новое значение курса: {course}')
+        try:
+            value = message.text.split('=', 1)[1].strip()
+            value = float(value.replace(',','.'))
+            await set_course(value)
+            await message.answer(f'Новое значение курса: {value}')
+        except ValueError:
+            await message.answer('Неверный формат!')
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
 @dp.message_handler(lambda msg: msg.text == 'Какой текущий курс юаня?')
 async def course_info(message:types.Message):
-    with open ('course.txt',"r") as c:
-        course = float(c.read())
-    await message.answer(f'Текущий курс юаня {course} ₽')
+    course = get_course()
+    if course is not None:
+        await message.answer(f'Текущий курс юаня {course} ₽')
+    else: 
+        await message.answer('Похоже, что курс еще не установлен...')
 
 @dp.message_handler(lambda msg: msg.text == 'Сделать заказ')    
 async def make_delivery(message:types.Message):
