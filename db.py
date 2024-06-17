@@ -1,6 +1,6 @@
 import asyncpg
 from config import DATABASE_URL
-
+import asyncio
 async def create_table():
     conn = await asyncpg.connect(DATABASE_URL)
     await conn.execute('''
@@ -21,3 +21,4 @@ async def get_course():
     row = await conn.fetchrow('SELECT value FROM course ORDER BY id DESC LIMIT 1')
     await conn.close()
     return row['value'] if row else None
+asyncio.get_event_loop().run_until_complete(create_table())
