@@ -73,7 +73,7 @@ async def change(message:types.Message):
 async def course_info(message:types.Message):
     course = await get_course()
     if course is not None:
-        await message.answer(f'Текущий курс юаня {course} ₽')
+        await message.answer(f'Текущий курс юаня {str(course)} ₽')
     else: 
         await message.answer('Похоже, что курс еще не установлен...')
 
