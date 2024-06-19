@@ -47,8 +47,8 @@ async def calculation(message:types.Message):
     try:
         course = await get_course()
         buy=float((message.text).replace(',',''))
-        count=math.floor(buy*course+1000)+1800
-        await message.answer(f' от {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
+        count=math.floor(buy*course+2500)
+        await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
     except ValueError:
         await message.answer(messages['warning'])
 
