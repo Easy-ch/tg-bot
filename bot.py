@@ -148,5 +148,3 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(calculation_clothes, lambda msg:msg.text.isdigit())
     dp.register_message_handler(photo, lambda c: c.text == 'Одежда')
     dp.register_message_handler(valid)
-if __name__== '__main__':
-    asyncio.run(main())
