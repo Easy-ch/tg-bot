@@ -13,7 +13,7 @@ from utils import  Сost_Clothing
 import asyncio
 # Bot token can be obtained via https://t.me/BotFather
 
-course = 0
+
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
