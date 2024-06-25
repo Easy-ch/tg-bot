@@ -8,9 +8,6 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from keyboards import Keyboards
 from messages import messages
 from config import TOKEN,ADMIN_ID
-from aiogram.dispatcher import FSMContext
-from utils import  Сost_Clothing
-import asyncio
 # Bot token can be obtained via https://t.me/BotFather
 
 
@@ -33,50 +30,24 @@ async def change_category(message:types.Message):
     await message.answer(messages['category'],reply_markup=Keyboards.keyboard_cost())
 
 @dp.message_handler(lambda c: c.text =='Обувь')
-async def photo(message:types.Message, state: FSMContext):
-    await state.set_state(Сost_Clothing.choose_shoes)
+async def photo(message:types.Message):
     photo = InputFile('gaid.jpg')
     await bot.send_photo(chat_id=message.chat.id,photo=photo)
     await message.answer(messages['help'])
-
-@dp.message_handler(run_task=Сost_Clothing.choose_shoes)
-async def calculation_shoes(message:types.Message,state: FSMContext):
-    try:
-        if message.text.isdigit():  
-            await state.update_data(buy=True)
-            course = await get_course()
-            buy=float((message.text).replace(',',''))
-            count=math.floor(buy*course+2500)
-            await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
-    except ValueError:
-        await message.answer(messages['warning'])
-
-
-@dp.message_handler(lambda c: c.text =='Одежда')
-async def photo_clothes(message:types.Message, state: FSMContext):
-    await state.set_state(Сost_Clothing.choose_clothes)
-    photo = InputFile('gaid.jpg')
-    await bot.send_photo(chat_id=message.chat.id,photo=photo)
-    await message.answer(messages['help'])
-
-
-@dp.message_handler(run_task=Сost_Clothing.choose_clothes)
-async def calculation_clothes(message:types.Message, state:FSMContext):
-    await state.update_data(buy=True)
-    try:
-        if message.text.isdigit():  
-            await state.update_data(buy=True)
-            course = await get_course()
-            buy=float((message.text).replace(',',''))
-            count=math.floor(buy*course+2500)-200
-            await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
-    except ValueError:
-        await message.answer(messages['warning'])
-
 
 @dp.message_handler(lambda c: c.text == 'Вернуться в главное меню')
 async def main_menu(message:types.Message):
     await command_start_handler(message) 
+
+@dp.message_handler(lambda message: message.text.isdigit())
+async def calculation(message:types.Message):
+    try:
+        course = await get_course()
+        buy=float((message.text).replace(',',''))
+        count=math.floor(buy*course+2500)
+        await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
+    except ValueError:
+        await message.answer(messages['warning'])
 
 @dp.message_handler(lambda msg: msg.text == 'Сменить курс')
 async def course_change(message:types.Message):
@@ -137,7 +108,7 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(change_category, lambda c: c.text == 'Рассчитать стоимость товара')
     dp.register_message_handler(photo, lambda c: c.text == 'Обувь')
     dp.register_message_handler(main_menu, lambda c: c.text == 'Вернуться в главное меню')
-    dp.register_message_handler(calculation_shoes, lambda message: message.text.isdigit())
+    dp.register_message_handler(calculation, lambda message: message.text.isdigit())
     dp.register_message_handler(course_change, lambda msg: msg.text == 'Сменить курс')
     dp.register_message_handler(change, lambda message: 'Setcourse=' in message.text)
     dp.register_message_handler(course_info, lambda msg: msg.text == 'Какой текущий курс юаня?')
@@ -145,6 +116,4 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(feedback, lambda msg: msg.text == 'Написать отзыв')
     dp.register_message_handler(faq, lambda msg: msg.text == 'FAQ')
     dp.register_message_handler(faq_answer, lambda msg: msg.text == 'Каковы сроки доставки?')
-    dp.register_message_handler(calculation_clothes, lambda msg:msg.text.isdigit())
-    dp.register_message_handler(photo, lambda c: c.text == 'Одежда')
     dp.register_message_handler(valid)
