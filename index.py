@@ -12,7 +12,7 @@ register_handlers(dp)
 
 app = FastAPI()
 
-WEBHOOK_PATH = f"/bot{TOKEN}"
+WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
