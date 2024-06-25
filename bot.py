@@ -13,7 +13,7 @@ from utils import  Cost_Clothing
 
 # Bot token can be obtained via https://t.me/BotFather
 
-course = 0
+
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
@@ -48,8 +48,7 @@ async def calculation_shoes(message:types.Message,state: FSMContext):
     try:  
         if message.text.isdigit():  
             await state.update_data(buy=True)
-            # course = await get_course()
-            global course
+            course = await get_course()
             buy=float((message.text).replace(',',''))
             count=math.floor(buy*course+2500)
             await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
@@ -73,9 +72,7 @@ async def calculation_clothes(message:types.Message, state:FSMContext):
     try:
         if message.text.isdigit():  
             await state.update_data(buy=True)
-           
-            # course = await get_course()
-            global course
+            course = await get_course()
             buy=float((message.text).replace(',',''))
             count=math.floor(buy*course+2500)-200
             await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
@@ -100,8 +97,7 @@ async def change(message:types.Message):
         try:
             value = message.text.split('=', 1)[1].strip()
             value = float(value.replace(',','.'))
-            # await set_course(value)
-            global course
+            await set_course(value)
             await message.answer(f'Новое значение курса: {value}')
         except ValueError:
             await message.answer('Неверный формат!')
@@ -110,8 +106,7 @@ async def change(message:types.Message):
 
 @dp.message_handler(lambda msg: msg.text == 'Какой текущий курс юаня?',state='*')
 async def course_info(message:types.Message):
-    global course
-    # course = await get_course()
+    course = await get_course()
     course = float('{:.2f}'.format(course))
     if course is not None:
         await message.answer(f'Текущий курс юаня {course} ₽')
