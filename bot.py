@@ -10,7 +10,7 @@ from messages import messages
 from config import TOKEN,ADMIN_ID
 from aiogram.dispatcher import FSMContext
 from utils import  Cost_Clothing
-
+from db import get_course,set_course
 # Bot token can be obtained via https://t.me/BotFather
 
 
