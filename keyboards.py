@@ -41,6 +41,7 @@ class Keyboards:
             keyboard=[
                 [
                     KeyboardButton(text='Обувь'), 
+                    KeyboardButton(text='Одежда'), 
                     KeyboardButton(text='Вернуться в главное меню')
                 ]
             ], 
