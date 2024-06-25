@@ -17,6 +17,7 @@ WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
+    await bot.delete_webhook()
     webhook_info = await bot.get_webhook_info()
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
