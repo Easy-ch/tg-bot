@@ -3,8 +3,8 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 
-from config import TOKEN
-from db import Course,Database,Order
+from config import TOKEN,DATABASE_URL   
+from db import Database
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,10 +15,11 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://dfe2-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://273b-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
+    await Database.connect(dsn=DATABASE_URL)
     webhook_info = await bot.get_webhook_info()
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
@@ -49,5 +50,4 @@ async def on_shutdown():
     await bot.session.close()   
 
 # Экспорт приложения для Vercel
-
 

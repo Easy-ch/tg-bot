@@ -3,11 +3,7 @@ import asyncio
 # import asyncio
 class Database:
     _pool = None
-    def __init__(self,host='127.0.0.1',user='easych',password='admin',database='bot_end') -> None:
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
+    
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
