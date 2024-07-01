@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 
-from config import TOKEN,DATABASE_URL   
+from config import TOKEN   
 from db import Database
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
-
+DATABASE_URL = "postgres://default:cNAgyo0j6JGl@ep-soft-snowflake-a4b3n145.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app/{WEBHOOK_PATH}"
 
