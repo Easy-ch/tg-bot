@@ -13,13 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
-DATABASE_URL = "postgres://default:cNAgyo0j6JGl@ep-soft-snowflake-a4b3n145.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app/{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
-    await Database.connect(dsn=DATABASE_URL)
+    await Database.connect()
     webhook_info = await bot.get_webhook_info()
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
