@@ -7,15 +7,14 @@ from config import POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER,POSTGRES_DATABA
 # import asyncio
 class Database:
     _pool = None
-    def __init__(self,host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE) -> None:
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
-            cls._pool = await asyncpg.create_pool(**kwargs)
+            cls._pool = await asyncpg.create_pool(           
+                host=POSTGRES_HOST,
+                user=POSTGRES_USER,
+                password=POSTGRES_PASSWORD,
+                database=POSTGRES_DATABASE)
         return cls._pool
     @classmethod
     async def close(cls):
