@@ -1,17 +1,17 @@
 import asyncpg
 import asyncio
-from config import POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER,POSTGRES_DATABASE
+# from config import POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER,POSTGRES_DATABASE
 
 
 
 # import asyncio
 class Database:
     _pool = None
-    def __init__(self,host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE) -> None:
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
+    # def __init__(self,host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE) -> None:
+    #     self.host = host
+    #     self.user = user
+    #     self.password = password
+    #     self.database = database
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
