@@ -15,7 +15,7 @@ class Database:
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
-            cls._pool = await asyncpg.create_pool(**kwargs)
+            cls._pool = await asyncpg.create_pool(host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE)
         return cls._pool
     @classmethod
     async def close(cls):
@@ -106,5 +106,5 @@ class Order:
         SET status = $2
         WHERE order_id = $1
         """
-        return await Database.execute(query,order_id,status)
+        return await Database.execute(query,order_id,status)  
     
