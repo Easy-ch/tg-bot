@@ -15,7 +15,7 @@ class Database:
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
-            cls._pool = await asyncpg.create_pool()
+            cls._pool = await asyncpg.create_pool(**kwargs)
         return cls._pool
     @classmethod
     async def close(cls):
