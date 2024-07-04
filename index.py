@@ -18,7 +18,8 @@ WEBHOOK_URL = f"https://bbbb-alpha.vercel.app/{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
-    await Database.connect( host=POSTGRES_HOST,
+    await Database.connect( 
+        host=POSTGRES_HOST,
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD,
         database=POSTGRES_DATABASE)
