@@ -10,7 +10,7 @@ class Database:
     async def connect(cls, **kwargs):
         if cls._pool is None:
             try:
-                cls._pool = await asyncpg.create_pool(dsn=kwargs)
+                cls._pool = await asyncpg.connect(**kwargs)
                 logger.info("Database connection pool created successfully")
                 logger.info(cls._pool)
             except Exception as e:
