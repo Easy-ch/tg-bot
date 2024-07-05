@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 import os
-from config import TOKEN   
+from config import TOKEN,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DATABASE,POSTGRES_HOST  
 from db import Database
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -22,10 +22,10 @@ async def on_startup():
     logger.info("Starting up application")
     try:
         await Database.connect(
-            user=os.getenv('POSTGRES_USER'),
-            password=os.getenv('POSTGRES_PASSWORD'),
-            database=os.getenv('POSTGRES_DATABASE'),
-            host=os.getenv('POSTGRES_HOST')
+            user=POSTGRES_USER, 
+            password=POSTGRES_PASSWORD, 
+            database=POSTGRES_DATABASE, 
+            host=POSTGRES_HOST
         )
         webhook_info = await bot.get_webhook_info()
         await bot.set_webhook(url=WEBHOOK_URL)
