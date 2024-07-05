@@ -1,3 +1,4 @@
+
 import asyncpg
 import logging
 
@@ -5,18 +6,18 @@ logger = logging.getLogger(__name__)
 
 class Database:
     _pool = None
-    
     @classmethod
     async def connect(cls, **kwargs):
         if cls._pool is None:
             try:
                 cls._pool = await asyncpg.create_pool(**kwargs)
                 logger.info("Database connection pool created successfully")
+                logger.info(cls._pool)
             except Exception as e:
                 logger.error(f"Failed to create database connection pool: {e}")
+                logger.info(cls._pool)
                 cls._pool = None
         return cls._pool
-    
     @classmethod
     async def close(cls):
         if cls._pool is not None:
