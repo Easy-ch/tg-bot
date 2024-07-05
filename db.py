@@ -14,8 +14,7 @@ class Database:
                 logger.info("Database connection pool created successfully")
                 logger.info(cls._pool)
             except Exception as e:
-                logger.error(f"Failed to create database connection pool: {e}")
-                logger.info(cls._pool)
+                logger.error(f"Failed to create database connection pool: {e},{cls._pool}")
                 cls._pool = None
         return cls._pool
     @classmethod
