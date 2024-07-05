@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 
-from config import TOKEN,POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DATABASE
+from config import TOKEN   
 from db import Database
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -13,16 +13,17 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
+
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://bbbb-alpha.vercel.app/{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
-    await Database.connect( 
-        host=POSTGRES_HOST,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        database=POSTGRES_DATABASE)
+    await Database.connect(    
+        user='default', 
+        password='cNAgyo0j6JGl', 
+        database='verceldb', 
+        host='ep-soft-snowflake-a4b3n145-pooler.us-east-1.aws.neon.tech')
     webhook_info = await bot.get_webhook_info()
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
@@ -53,4 +54,5 @@ async def on_shutdown():
     await bot.session.close()   
 
 # Экспорт приложения для Vercel
-app=app
+
+
