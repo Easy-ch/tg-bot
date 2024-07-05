@@ -1,21 +1,16 @@
 import asyncpg
-import asyncio
-# from config import POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER,POSTGRES_DATABASE
 
-
-
-# import asyncio
 class Database:
-    _pool = None
-    # def __init__(self,host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE) -> None:
-    #     self.host = host
-    #     self.user = user
-    #     self.password = password
-    #     self.database = database
+    _pool = None    
+    def __init__(self,host='ep-soft-snowflake-a4b3n145-pooler.us-east-1.aws.neon.tech',user='default',password='cNAgyo0j6JGl',database='verceldb') -> None:
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
-            cls._pool = await asyncpg.create_pool(host=POSTGRES_HOST,user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE)
+            cls._pool = await asyncpg.create_pool(**kwargs)
         return cls._pool
     @classmethod
     async def close(cls):
@@ -106,5 +101,4 @@ class Order:
         SET status = $2
         WHERE order_id = $1
         """
-        return await Database.execute(query,order_id,status)  
-    
+        return await Database.execute(query,order_id,status)
