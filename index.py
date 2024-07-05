@@ -20,10 +20,10 @@ WEBHOOK_URL = f"https://7c05-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
 @app.on_event("startup")
 async def on_startup():
     await Database.connect(    
-        user=os.getenv('POSTGRES_USER'),
-        password=os.getenv('POSTGRES_PASSWORD'),
-        database=os.getenv('POSTGRES_DATABASE'),
-        host=os.getenv('POSTGRES_HOST'))
+        user='default', 
+        password='cNAgyo0j6JGl', 
+        database='verceldb', 
+        host='ep-soft-snowflake-a4b3n145-pooler.us-east-1.aws.neon.tech')
     webhook_info = await bot.get_webhook_info()
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
