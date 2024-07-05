@@ -2,11 +2,6 @@ import asyncpg
 
 class Database:
     _pool = None    
-    def __init__(self,host='ep-soft-snowflake-a4b3n145-pooler.us-east-1.aws.neon.tech',user='default',password='cNAgyo0j6JGl',database='verceldb') -> None:
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
     @classmethod
     async def connect(cls,**kwargs):
         if cls._pool is None:
