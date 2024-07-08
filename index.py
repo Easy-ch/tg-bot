@@ -3,9 +3,8 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 import os
-from config import TOKEN,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DATABASE,POSTGRES_HOST  
+from config import TOKEN
 from db import Database
-from starlette.middleware.cors import CORSMiddleware
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,16 +14,6 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
@@ -33,17 +22,15 @@ async def on_startup():
     logger.info("Starting up application")
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
-
     try:
         await Database.connect(
-            user=POSTGRES_USER, 
-            password=POSTGRES_PASSWORD, 
-            database=POSTGRES_DATABASE, 
-            host=POSTGRES_HOST
-        )
+            user=os.getenv('POSTGRES_USER'), 
+            password=os.getenv('POSTGRES_PASSWORD'), 
+            database=os.getenv('POSTGRES_DATABASE'), 
+            host=os.getenv('POSTGRES_HOST')
+        )   
     except Exception as e:
         logger.error(f"Failed to connect to database:{e}")
-
 
 @app.get("/")
 async def read_root():
@@ -64,6 +51,7 @@ async def bot_webhook(request: Request):
     except Exception as e:
         logger.error(f"Failed to process update: {e}")
         return {"status": "error", "message": str(e)}
+    
 
 @app.on_event("shutdown")
 async def on_shutdown():
