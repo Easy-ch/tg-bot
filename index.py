@@ -34,12 +34,6 @@ async def on_startup():
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
 
-@app.get("/")
-async def read_root():
-    return {"message": "Webhook is set and running"}
-
-@app.post(WEBHOOK_PATH)
-async def bot_webhook(request: Request):
     try:
         await Database.connect(
             user=POSTGRES_USER, 
@@ -49,6 +43,14 @@ async def bot_webhook(request: Request):
         )
     except Exception as e:
         logger.error(f"Failed to connect to database:{e}")
+
+
+@app.get("/")
+async def read_root():
+    return {"message": "Webhook is set and running"}
+
+@app.post(WEBHOOK_PATH)
+async def bot_webhook(request: Request):
     try:
         logger.info("Received a POST request")
         update = await request.json()
