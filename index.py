@@ -26,8 +26,7 @@ app.add_middleware(
 
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://api.telegram.org/bot6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw/setWebhook?url=https://bbbb-alpha.vercel.app/6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw
-"
+WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
