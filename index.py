@@ -31,18 +31,8 @@ WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 @app.on_event("startup")
 async def on_startup():
     logger.info("Starting up application")
-    try:
-        await Database.connect(
-            user=POSTGRES_USER, 
-            password=POSTGRES_PASSWORD, 
-            database=POSTGRES_DATABASE, 
-            host=POSTGRES_HOST
-        )
-        webhook_info = await bot.get_webhook_info()
-        await bot.set_webhook(url=WEBHOOK_URL)
-        logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
-    except Exception as e:
-        logger.error(f"Failed to connect to database or set webhook: {e}")
+    await bot.set_webhook(url=WEBHOOK_URL)
+    logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
 
 @app.get("/")
 async def read_root():
@@ -50,6 +40,15 @@ async def read_root():
 
 @app.post(WEBHOOK_PATH)
 async def bot_webhook(request: Request):
+    try:
+        await Database.connect(
+            user=POSTGRES_USER, 
+            password=POSTGRES_PASSWORD, 
+            database=POSTGRES_DATABASE, 
+            host=POSTGRES_HOST
+        )
+    except Exception as e:
+        logger.error(f"Failed to connect to database:{e}")
     try:
         logger.info("Received a POST request")
         update = await request.json()
