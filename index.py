@@ -49,7 +49,7 @@ async def on_startup():
 async def read_root():
     return {"message": "Webhook is set and running"}
 
-@app.post(WEBHOOK_PATH)
+@app.post(WEBHOOK_URL)
 async def bot_webhook(request: Request):
     try:
         logger.info("Received a POST request")
