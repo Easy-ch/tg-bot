@@ -5,6 +5,7 @@ from handlers import dp, bot
 import os
 from config import TOKEN,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DATABASE,POSTGRES_HOST  
 from db import Database
+from starlette.middleware.cors import CORSMiddleware
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -13,6 +14,16 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
