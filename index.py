@@ -3,16 +3,23 @@ from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 import os
-from config import TOKEN
-from db import Database
+from dotenv import load_dotenv
+from config import TOKEN,POSTGRES_DATABASE,POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER
+from db import Database,Course,Order
+
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Загрузка переменных окружения из .env файла
-
+load_dotenv()
 
 app = FastAPI()
+
+# USER=os.getenv('POSTGRES_USER'), 
+# PASSWORD=os.getenv('POSTGRES_PASSWORD'), 
+# DATABASE=os.getenv('POSTGRES_DATABASE'), 
+# HOST=os.getenv('POSTGRES_HOST')
 
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
@@ -20,18 +27,16 @@ WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 @app.on_event("startup")
 async def on_startup():
     logger.info("Starting up application")
-    await bot.set_webhook(url=WEBHOOK_URL)
-    logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
     try:
-        await Database.connect(
-            user=os.getenv('POSTGRES_USER'), 
-            password=os.getenv('POSTGRES_PASSWORD'), 
-            database=os.getenv('POSTGRES_DATABASE'), 
-            host=os.getenv('POSTGRES_HOST')
-        )   
+        await Database.connect(user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE,host=POSTGRES_HOST)  
+        await Course.create_table()
+        await Order.create_table()
+        
     except Exception as e:
         logger.error(f"Failed to connect to database:{e}")
-
+    await bot.set_webhook(url=WEBHOOK_URL)
+    logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
+    
 @app.get("/")
 async def read_root():
     return {"message": "Webhook is set and running"}
