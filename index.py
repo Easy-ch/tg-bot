@@ -2,8 +2,6 @@ import logging
 from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
-import os
-from dotenv import load_dotenv
 from config import TOKEN,POSTGRES_DATABASE,POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER
 from db import Database,Course,Order
 
@@ -12,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Загрузка переменных окружения из .env файла
-load_dotenv()
+
 
 app = FastAPI()
 
