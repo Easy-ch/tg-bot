@@ -17,7 +17,7 @@ load_dotenv()
 app = FastAPI()
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://eb2a-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 async def init():
     logger.info("Starting up application")
