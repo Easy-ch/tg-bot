@@ -18,7 +18,7 @@ WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
-async def on_startup():
+def on_startup():
     asyncio.run(init())
 
 async def init():
