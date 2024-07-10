@@ -15,7 +15,7 @@ app = FastAPI()
 
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://bbbb-alpha.vercel.app/{TOKEN}"
 
 @app.on_event("startup")
 def on_startup():
@@ -32,6 +32,7 @@ async def init():
         logger.error(f"Failed to connect to database:{e}")
     await bot.set_webhook(url=WEBHOOK_URL)
     logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
+    
     
 @app.get("/")
 async def read_root():
