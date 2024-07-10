@@ -11,11 +11,13 @@
     { "src": "/(.*)", "dest": "/index.py" }
   ],
   "env": {
-    "POSTGRES_HOST": "ep-soft-snowflake-a4b3n145.us-east-1.aws.neon.tech",
+    "POSTGRES_HOST": "ep-late-lab-a4e96vwv-pooler.us-east-1.aws.neon.tech",
     "POSTGRES_USER": "default",
-    "POSTGRES_PASSWORD": "cNAgyo0j6JGl",
+    "POSTGRES_PASSWORD": "nNKJaXEgM1A9",
     "POSTGRES_DATABASE": "verceldb",
     "TOKEN": "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
-
+  
   }
 }
+
+
