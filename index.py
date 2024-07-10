@@ -4,26 +4,24 @@ from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
 from config import TOKEN,POSTGRES_DATABASE,POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_USER
 from db import Database,Course,Order
-
+import asyncio
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Загрузка переменных окружения из .env файла
 
-
 app = FastAPI()
 
-# USER=os.getenv('POSTGRES_USER'), 
-# PASSWORD=os.getenv('POSTGRES_PASSWORD'), 
-# DATABASE=os.getenv('POSTGRES_DATABASE'), 
-# HOST=os.getenv('POSTGRES_HOST')
 
 WEBHOOK_PATH = f"/{TOKEN}"
 WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
 
 @app.on_event("startup")
 async def on_startup():
+    asyncio.run(init())
+
+async def init():
     logger.info("Starting up application")
     try:
         await Database.connect(user=POSTGRES_USER,password=POSTGRES_PASSWORD,database=POSTGRES_DATABASE,host=POSTGRES_HOST)  
