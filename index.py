@@ -2,6 +2,7 @@ import logging
 from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
+from dotenv import load_dotenv
 from config import TOKEN, POSTGRES_DATABASE, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER
 from db import Database, Course, Order
 import asyncio
@@ -11,11 +12,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Загрузка переменных окружения из .env файла
+load_dotenv()
 
 app = FastAPI()
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://bbbb-alpha.vercel.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://eb2a-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
 
 async def init():
     logger.info("Starting up application")
@@ -31,6 +33,7 @@ async def init():
 @app.on_event("startup")
 def on_startup():
     asyncio.create_task(init())
+    logger.info('Create_task')
 
 @app.get("/")
 async def read_root():
@@ -52,10 +55,13 @@ async def bot_webhook(request: Request):
         logger.error(f"Failed to process update: {e}")
         return {"status": "error", "message": str(e)}
 
-@app.on_event("shutdown")
-async def on_shutdown():
+async def shutdown():
     await Database.close()
     await bot.session.close()
+
+@app.on_event("shutdown")
+def on_shutdown():
+    asyncio.create_task(shutdown())
 
 # Экспорт приложения для Vercel
 app = app
