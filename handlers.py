@@ -42,6 +42,10 @@ async def photo(message:types.Message):
     await bot.send_photo(chat_id=message.chat.id,photo=photo)
     await message.answer(messages['help'])
 
+
+
+
+
 @dp.message_handler(state=Cost_Clothing.choose_shoes)
 async def calculation_shoes(message:types.Message,state: FSMContext):
     try:  
@@ -61,7 +65,7 @@ async def calculation_shoes(message:types.Message,state: FSMContext):
 async def photo_clothes(message:types.Message):
     # await state.set_state(Cost_Clothing.choose_clothes)
     await Cost_Clothing.choose_clothes.set()
-    photo = InputFile('gaid.jpg')
+    photo = InputFile('gaid2.jpg')
     await bot.send_photo(chat_id=message.chat.id,photo=photo)
     await message.answer(messages['help'])
 
@@ -105,7 +109,7 @@ async def change(message:types.Message, state: FSMContext):
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
-@dp.message_handler(lambda msg: msg.text == 'Какой текущий курс юаня?',state='*')
+@dp.message_handler(lambda msg: msg.text == 'Текущий курс юаня',state='*')
 async def course_info(message:types.Message):
     course = await Course.get_course()
     course = float('{:.2f}'.format(course))
@@ -132,7 +136,9 @@ async def faq(message:types.Message):
 async def faq_answer(message:types.Message):
     await message.answer(messages['info'])
 
-
+@dp.message_handler(lambda msg:msg.text == 'Товар оригинал?',state='*')
+async def faq_answer2(message:types.Message):
+    await message.answer(messages['info2'])
 
 @dp.message_handler(lambda msg: msg.text == 'Добавить заказ',state='*')
 async def add_order_start(message:types.Message):

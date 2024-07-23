@@ -35,9 +35,10 @@ class Keyboards:
     @staticmethod
     def keyboard_cost():
         keyboard = ReplyKeyboardMarkup(
-            keyboard=[
+            keyboard=[  
                 [
                     KeyboardButton(text='Обувь'), 
+                    KeyboardButton(text='Одежда'),
                     KeyboardButton(text='Вернуться в главное меню')
                 ]
             ], 
@@ -50,6 +51,7 @@ class Keyboards:
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [KeyboardButton(text='Каковы сроки доставки?')],
+                [KeyboardButton(text='Товар оригинал?')],
                 [KeyboardButton(text='Вернуться в главное меню')]
             ],
             resize_keyboard=True,
