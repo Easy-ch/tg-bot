@@ -105,6 +105,7 @@ async def change(message:types.Message, state: FSMContext):
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
+
 @dp.message_handler(lambda msg: msg.text == 'Текущий курс юаня',state='*')
 async def course_info(message:types.Message):
     course = await Course.get_course()
