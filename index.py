@@ -2,9 +2,11 @@ import logging
 from fastapi import FastAPI, Request
 from aiogram import types, Dispatcher, Bot
 from handlers import dp, bot
+from config import TOKEN, POSTGRES_DATABASE, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER
+from db import Database, Course, Order
+import asyncio
 
-from config import TOKEN
-from db import Course,Database,Order
+
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,16 +17,24 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 WEBHOOK_PATH = f"/{TOKEN}"
-WEBHOOK_URL = f"https://dfe2-188-243-182-2.ngrok-free.app{WEBHOOK_PATH}"
+WEBHOOK_URL = f"https://9e10-188-170-83-100.ngrok-free.app{WEBHOOK_PATH}"
+
+async def init():
+    logger.info("Starting up application")
+    try:
+        await Database.connect(user=POSTGRES_USER, password=POSTGRES_PASSWORD, database=POSTGRES_DATABASE, host=POSTGRES_HOST)
+        await Course.create_table()
+        await Order.create_table()
+        await bot.set_webhook(url=WEBHOOK_URL)
+        logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
+    except Exception as e:
+        logger.error(f"Failed to initialize: {e}")
 
 @app.on_event("startup")
-async def on_startup():
-    await Database.connect(host='127.0.0.1',user='easych',password='admin',database='bot_end')
-    await Course.create_table()
-    await Order.create_table()
-    webhook_info = await bot.get_webhook_info()
-    await bot.set_webhook(url=WEBHOOK_URL)
-    logger.info(f"Webhook URL set to: {WEBHOOK_URL}")
+def on_startup():
+    asyncio.create_task(init())
+    logger.info('Create_task')
+
 
 @app.get("/")
 async def read_root():
@@ -46,11 +56,19 @@ async def bot_webhook(request: Request):
         logger.error(f"Failed to process update: {e}")
         return {"status": "error", "message": str(e)}
 
+async def shutdown():
+    await Database.close()
+    await bot.session.close()
+
 @app.on_event("shutdown")
+
+
 async def on_shutdown():
     await Database.close()
     await bot.session.close()   
 
+
 # Экспорт приложения для Vercel
+app = app
 
 

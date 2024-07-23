@@ -42,6 +42,7 @@ class Keyboards:
             ],
             resize_keyboard=True,
             one_time_keyboard=False,
+
         )
         return keyboard
 
@@ -50,6 +51,7 @@ class Keyboards:
         keyboard = ReplyKeyboardMarkup(
             keyboard=[
                 [KeyboardButton(text='Каковы сроки доставки?')],
+                [KeyboardButton(text='Товар оригинал?')],
                 [KeyboardButton(text='Вернуться в главное меню')]
             ],
             resize_keyboard=True,
