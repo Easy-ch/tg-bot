@@ -12,7 +12,6 @@ from utils import  Cost_Clothing,Orders_states,Course_states
 from db import Course,Order
 # Bot token can be obtained via https://t.me/BotFather
 
-
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
@@ -21,11 +20,9 @@ dp.middleware.setup(LoggingMiddleware())
 async def main() -> None:
     # Initialize Bot instance with default bot properties which will be passed to all API calls
     await dp.start_polling(bot)
-    
 
 @dp.message_handler(CommandStart(),state='*')
 async def command_start_handler(message:types.Message) -> None:
-
     await message.answer(messages['welcome_text'],reply_markup= Keyboards.start_keyboard())
     if message.from_user.id == int(ADMIN_ID) :
         await message.answer('Вы зарегестрировались как админ',reply_markup=Keyboards.admin_keyboard())
@@ -36,7 +33,6 @@ async def change_category(message:types.Message):
 
 @dp.message_handler(lambda c: c.text =='Обувь',state='*')
 async def photo(message:types.Message):
-    # await state.set_state(Cost_Clothing.choose_shoes)
     await Cost_Clothing.choose_shoes.set()
     photo = InputFile('gaid.jpg')
     await bot.send_photo(chat_id=message.chat.id,photo=photo)
@@ -48,7 +44,6 @@ async def calculation_shoes(message:types.Message,state: FSMContext):
         if message.text.isdigit():  
             await state.update_data(buy=True)
             course = await Course.get_course()
-            
             buy=float((message.text).replace(',',''))
             count=math.floor(buy*course+2500)
             await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
@@ -56,15 +51,12 @@ async def calculation_shoes(message:types.Message,state: FSMContext):
     except ValueError:
         await message.answer(messages['warning'])
 
-
-@dp.message_handler(lambda c: c.text =='Одежда')
+@dp.message_handler(lambda c: c.text =='Одежда',state='*')
 async def photo_clothes(message:types.Message):
-    # await state.set_state(Cost_Clothing.choose_clothes)
     await Cost_Clothing.choose_clothes.set()
     photo = InputFile('gaid2.jpg')
     await bot.send_photo(chat_id=message.chat.id,photo=photo)
     await message.answer(messages['help'])
-
 
 @dp.message_handler(state=Cost_Clothing.choose_clothes)
 async def calculation_clothes(message:types.Message, state:FSMContext):
@@ -78,19 +70,16 @@ async def calculation_clothes(message:types.Message, state:FSMContext):
             await state.finish()
     except ValueError:
         await message.answer(messages['warning'])
-        
-
 
 @dp.message_handler(lambda c: c.text == 'Вернуться в главное меню',state='*')
 async def main_menu(message:types.Message):
     await command_start_handler(message) 
-    
 
 @dp.message_handler(lambda msg: msg.text == 'Сменить курс',state='*')
 async def course_change(message:types.Message):
     await message.answer(messages['course'])
     await Course_states.waiting_for_course_change.set()
-
+    
 @dp.message_handler(state=Course_states.waiting_for_course_change)
 async def change(message:types.Message, state: FSMContext):
     if message.from_user.id == int(ADMIN_ID):
@@ -105,7 +94,6 @@ async def change(message:types.Message, state: FSMContext):
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
 
-
 @dp.message_handler(lambda msg: msg.text == 'Текущий курс юаня',state='*')
 async def course_info(message:types.Message):
     course = await Course.get_course()
@@ -114,6 +102,7 @@ async def course_info(message:types.Message):
         await message.answer(f'Текущий курс юаня {course} ₽')
     else: 
         await message.answer('Похоже, что курс еще не установлен...')
+
 
 @dp.message_handler(lambda msg: msg.text == 'Сделать заказ',state='*')    
 async def make_delivery(message:types.Message):
@@ -125,6 +114,7 @@ async def make_delivery(message:types.Message):
 async def feedback(message:types.Message):
     await message.answer(messages['feedback'])
 
+
 @dp.message_handler(lambda msg: msg.text == 'FAQ')
 async def faq(message:types.Message):
     await message.answer('Здесь вы можете узнать ответы на часто задаваемые вопросы:',reply_markup=Keyboards.keyboard_Faq())
@@ -133,10 +123,10 @@ async def faq(message:types.Message):
 async def faq_answer(message:types.Message):
     await message.answer(messages['info'])
 
-
 @dp.message_handler(lambda msg:msg.text == 'Товар оригинал?',state='*')
 async def faq_answer2(message:types.Message):
     await message.answer(messages['info2'])
+
 
 @dp.message_handler(lambda msg: msg.text == 'Добавить заказ',state='*')
 async def add_order_start(message:types.Message):
@@ -168,7 +158,20 @@ async def process_order_status(message:types.Message,state:FSMContext):
     status = message.text
     await state.update_data(status = str(status))
     try:
-        await message.answer('Введите пароль для доступа к заказу')
+        await message.answer('Отправьте фото выкупа ')
+        await Orders_states.next()
+    except ValueError:
+        await message.answer('Неверный формат!')
+
+@dp.message_handler(state=Orders_states.waiting_for_order_photo,content_types=types.ContentType.PHOTO)
+async def process_order_photo(message:types.Message,state:FSMContext):
+    photo = message.photo[-1].file_id
+    try:
+        file = await bot.get_file(photo)
+        file_path = f"images/{file.file_id}.jpg"
+        await bot.download_file(file.file_path, file_path)
+        await state.update_data(image_path=file_path)
+        await message.answer('Введите пароль для доступа к заказу ')
         await Orders_states.next()
     except ValueError:
         await message.answer('Неверный формат!')
@@ -178,7 +181,7 @@ async def process_order_password(message:types.Message,state: FSMContext):
     access_password = message.text.strip()
     await state.update_data(access_password=str(access_password))
     user_data = await state.get_data()
-    await Order.add_order(user_data['order_id'],user_data['description'],user_data['status'],user_data['access_password'])
+    await Order.add_order(user_data['order_id'],user_data['description'],user_data['status'],user_data['access_password'],user_data['image_path'])
     await message.answer('Заказ успешно добавлен!')
     await state.finish()
 
@@ -189,7 +192,6 @@ async def delete_order_start(message:types.Message):
         await Orders_states.waiting_for_order_delete.set()
     else:
         await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)') 
-
 
 @dp.message_handler(state=Orders_states.waiting_for_order_delete)
 async def process_delete_order(message:types.Message,state:FSMContext):
@@ -231,7 +233,6 @@ async def process_change_status_order(message:types.Message,state:FSMContext):
         await message.answer('Заказ с таким номером не найден.')
     await state.finish()
 
-
 @dp.message_handler(lambda msg: msg.text == 'Отследить заказ',state='*')
 async def process_view_order(message:types.Message):
     await message.answer('Введите номер заказа')
@@ -244,7 +245,6 @@ async def process_view_password(message:types.Message,state:FSMContext):
     await message.answer('Введите пароль')
     await Orders_states.next()
 
-
 @dp.message_handler(state=Orders_states.waiting_view_password)
 async def process_check_password(message:types.Message,state:FSMContext):
     access_password = message.text
@@ -252,15 +252,18 @@ async def process_check_password(message:types.Message,state:FSMContext):
     order = await Order.get_order(user_data['order_id'])
     if order:
         if access_password == order['access_password']:
+            order_id = order['order_id']
             description = order['description']
             status = order['status']
-            await message.answer(f'Заказ {description},{status}')
+            image_path = order['image']
+            photo = open(image_path,'rb')
+            await message.answer(f'Заказ под номером: {order_id} \nОписание: {description} \nСтатус: {status} ')
+            await message.answer_photo(photo)
             await state.finish
         else:
             await message.answer('Пароль неверный')
     else:
         await message.answer('Неверный номер заказа')   
-
 
 @dp.message_handler()
 async def valid(message:types.Message):
@@ -271,4 +274,3 @@ async def echo_handler(message:types.Message) -> None:
             await message.copy_to(chat_id=message.chat.id)
         except TypeError:
             await message.answer("Nice try!")
-

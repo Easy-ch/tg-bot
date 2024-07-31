@@ -8,6 +8,7 @@ class Orders_states(StatesGroup):
     waiting_for_order_id = State()
     waiting_for_order_description = State()
     waiting_for_order_status = State()
+    waiting_for_order_photo = State()
     waiting_for_order_password = State()
     waiting_for_order_delete = State()
     waiting_order_view = State()
@@ -18,7 +19,3 @@ class Orders_states(StatesGroup):
     
 class Course_states(StatesGroup):
     waiting_for_course_change = State()
-    
-
-
-    

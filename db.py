@@ -1,4 +1,3 @@
-
 import asyncpg
 import logging
 
@@ -6,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 class Database:
     _pool = None
-    def __init__(self,host,user,password,database) -> None:
+    def init(self,host,user,password,database) -> None:
         self.host = host
         self.user = user
         self.password = password
@@ -58,15 +57,17 @@ class Course:
     async def create_table(cls):
         query = """
             CREATE TABLE IF NOT EXISTS course (
-                id SERIAL PRIMARY KEY,
-                value REAL NOT NULL
-            )
-        """
+            id INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+            value REAL NOT NULL );
+            """
         return await Database.execute(query)
     
     @classmethod
     async def set_course(cls, value):
-        query = 'INSERT INTO course (value) VALUES ($1)'
+        query = """ 
+            INSERT INTO course (id, value) VALUES (1, $1)
+            ON CONFLICT (id) DO UPDATE SET value = EXCLUDED.value;
+        """  
         return await Database.execute(query, value)
     
     @classmethod
@@ -84,15 +85,16 @@ class Order:
                 order_id VARCHAR(50) NOT NULL,
                 description TEXT,
                 status VARCHAR(50) NOT NULL,  
-                access_password VARCHAR(255) NOT NULL  
-            )
+                access_password VARCHAR(255) NOT NULL, 
+                image TEXT 
+            );
         """
         return await Database.execute(query)
     
     @classmethod
-    async def add_order(cls, order_id, description, status, access_password):
-        query = 'INSERT INTO orders (order_id, description, status, access_password) VALUES ($1, $2, $3, $4)'
-        return await Database.execute(query, order_id, description, status, access_password)
+    async def add_order(cls, order_id, description, status, access_password,image_path):
+        query = 'INSERT INTO orders (order_id, description, status, access_password,image) VALUES ($1, $2, $3, $4,$5)'
+        return await Database.execute(query, order_id, description, status, access_password,image_path)
 
     @classmethod
     async def password_valid(cls, order_id, access_password):
