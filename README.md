@@ -29,10 +29,12 @@
     ```
 
 3. **Настройте переменные окружения**:
-    Создайте файл config.py и сзораните туда свои переменные 
+    Создайте файл config.py и сохраните туда свои переменные 
    ```config.py
     TOKEN=your_telegram_bot_token
     ADMIN_ID=your_telegram_user_id
+    Postgresql_url = your_url
+   
     ```
 
 4. **Запустите бота локально**:
