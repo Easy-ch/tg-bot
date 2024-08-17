@@ -9,7 +9,7 @@ class Keyboards:
                 [KeyboardButton(text='Сменить курс')],
                 [KeyboardButton(text='Удалить заказ')],
                 [KeyboardButton(text='Изменить статус')],
-                [KeyboardButton(text='Вернуться в главное меню')]
+                [KeyboardButton(text='Список заказов')]
             ],
             resize_keyboard=True,
             one_time_keyboard=False,

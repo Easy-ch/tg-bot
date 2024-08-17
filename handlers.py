@@ -6,10 +6,14 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from keyboards import Keyboards
 from messages import messages
+from aiogram.utils.executor import start_webhook
+from config import TOKEN, POSTGRES_DATABASE, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER
 from config import TOKEN,ADMIN_ID
 from aiogram.dispatcher import FSMContext
 from utils import  Cost_Clothing,Orders_states,Course_states
-from db import Course,Order
+from db import Course,Order,Database
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
+import logging
 # Bot token can be obtained via https://t.me/BotFather
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
@@ -17,9 +21,40 @@ storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 dp.middleware.setup(LoggingMiddleware())
 
-async def main() -> None:
-    # Initialize Bot instance with default bot properties which will be passed to all API calls
-    await dp.start_polling(bot)
+
+
+WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app'
+WEBHOOK_PATH = f'/{TOKEN}'
+WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+
+# webserver settings
+WEBAPP_HOST = 'localhost'  # or ip
+WEBAPP_PORT = 8000
+
+logging.basicConfig(level=logging.INFO)
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+    await Database.connect(user=POSTGRES_USER, password=POSTGRES_PASSWORD, database=POSTGRES_DATABASE, host=POSTGRES_HOST)
+    await Course.create_table()
+    await Order.create_table()
+    # insert code here to run it after start
+
+
+async def on_shutdown(dp):
+    logging.warning('Shutting down..')
+
+    # insert code here to run it before shutdown
+
+    # Remove webhook (not acceptable in some cases)
+    await bot.delete_webhook()
+
+    # Close DB connection (if used)
+    await Database.close()
+    
+    logging.warning('Bye!')
+
+
+
 
 @dp.message_handler(CommandStart(),state='*')
 async def command_start_handler(message:types.Message) -> None:
@@ -46,7 +81,7 @@ async def calculation_shoes(message:types.Message,state: FSMContext):
             course = await Course.get_course()
             buy=float((message.text).replace(',',''))
             count=math.floor(buy*course+2500)
-            await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
+            await message.answer(f'Комиссия: 1.000₽\n \nСтоимость заказа: {count}₽\n \nПри поступлении товара в Москву становится известна точная цена, делаем отправку транспортной компанией CDEK, в среднем цена ~300-700₽ ')
             await state.finish()
     except ValueError:
         await message.answer(messages['warning'])
@@ -65,8 +100,8 @@ async def calculation_clothes(message:types.Message, state:FSMContext):
             await state.update_data(buy=True)
             course = await Course.get_course()
             buy=float((message.text).replace(',',''))
-            count=math.floor(buy*course+2500)-200
-            await message.answer(f'  {count} ₽ - стоимость вашего заказа (с учетом комиссий)')
+            count=math.floor(buy*course+2300)
+            await message.answer(f'Комиссия: 1.000₽\n \nСтоимость заказа: {count}₽\n \nПри поступлении товара в Москву становится известна точная цена, делаем отправку транспортной компанией CDEK, в среднем цена ~300-700₽ ')
             await state.finish()
     except ValueError:
         await message.answer(messages['warning'])
@@ -77,8 +112,11 @@ async def main_menu(message:types.Message):
 
 @dp.message_handler(lambda msg: msg.text == 'Сменить курс',state='*')
 async def course_change(message:types.Message):
-    await message.answer(messages['course'])
-    await Course_states.waiting_for_course_change.set()
+    if message.from_user.id == int(ADMIN_ID):
+        await message.answer(messages['course'])
+        await Course_states.waiting_for_course_change.set()
+    else:
+        await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)')
     
 @dp.message_handler(state=Course_states.waiting_for_course_change)
 async def change(message:types.Message, state: FSMContext):
@@ -229,9 +267,27 @@ async def process_change_status_order(message:types.Message,state:FSMContext):
     if order:
         await Order.change_status_order(order_id,status)
         await message.answer('Статус заказа успешно изменен!')
+        await state.finish()
     else:
         await message.answer('Заказ с таким номером не найден.')
-    await state.finish()
+        await state.finish()
+
+@dp.message_handler(lambda msg: msg.text=='Список заказов', state='*')
+async def process_check_order(message:types.Message):
+    if message.from_user.id == int(ADMIN_ID):
+        order = await Order.get_all_orders()
+        await message.answer(f'Заказы')
+        if order:
+            for item in order:
+                orders_list =f"{item['order_id']}\n{item['description']}({item['status']})\n"
+                await message.answer(orders_list)    
+        else:
+            await message.answer('Нет заказов')
+    else:
+        await message.answer('ахахах,засранец, как ты узнал? (нет тебя в админах)') 
+    
+
+
 
 @dp.message_handler(lambda msg: msg.text == 'Отследить заказ',state='*')
 async def process_view_order(message:types.Message):
@@ -242,28 +298,34 @@ async def process_view_order(message:types.Message):
 async def process_view_password(message:types.Message,state:FSMContext):
     order_id = message.text
     await state.update_data(order_id = str(order_id))
-    await message.answer('Введите пароль')
-    await Orders_states.next()
+    user_data = await state.get_data()
+    order = await Order.get_order(user_data['order_id'])
+    if order:
+        await message.answer('Введите пароль')
+        await Orders_states.next()
+    else:
+        await message.answer('Неверный номер заказа')
+        await state.finish()
+         
 
 @dp.message_handler(state=Orders_states.waiting_view_password)
 async def process_check_password(message:types.Message,state:FSMContext):
     access_password = message.text
     user_data = await state.get_data()
     order = await Order.get_order(user_data['order_id'])
-    if order:
-        if access_password == order['access_password']:
-            order_id = order['order_id']
-            description = order['description']
-            status = order['status']
-            image_path = order['image']
-            photo = open(image_path,'rb')
-            await message.answer(f'Заказ под номером: {order_id} \nОписание: {description} \nСтатус: {status} ')
-            await message.answer_photo(photo)
-            await state.finish
-        else:
-            await message.answer('Пароль неверный')
+    if access_password == order['access_password']:
+        order_id = order['order_id']
+        description = order['description']
+        status = order['status']
+        image_path = order['image']
+        photo = open(image_path,'rb')
+        await message.answer(f'Заказ под номером: {order_id} \n{description} \nСтатус: {status} ')
+        await message.answer_photo(photo)
+        await state.finish()
     else:
-        await message.answer('Неверный номер заказа')   
+        await message.answer('Пароль неверный')
+        await state.finish()
+
 
 @dp.message_handler()
 async def valid(message:types.Message):
@@ -274,3 +336,15 @@ async def echo_handler(message:types.Message) -> None:
             await message.copy_to(chat_id=message.chat.id)
         except TypeError:
             await message.answer("Nice try!")
+
+
+if __name__ == '__main__':
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )

@@ -97,11 +97,10 @@ class Order:
         return await Database.execute(query, order_id, description, status, access_password,image_path)
 
     @classmethod
-    async def password_valid(cls, order_id, access_password):
-        query = 'SELECT 1 FROM orders WHERE order_id = $1 AND access_password = $2'
-        row = await Database.fetchrow(query, order_id, access_password)
-        return row is not None
-    
+    async def get_all_orders(cls):
+        query = 'SELECT order_id,description,status FROM orders'
+        row = await Database.fetch(query)
+        return row 
     @classmethod
     async def order_exists(cls, order_id):
         query = 'SELECT 1 FROM orders WHERE order_id = $1'
@@ -123,3 +122,9 @@ class Order:
     async def change_status_order(cls, order_id, status):
         query = 'UPDATE orders SET status = $2 WHERE order_id = $1'
         return await Database.execute(query, order_id, status)
+    
+    @classmethod
+    async def password_valid(cls, order_id, access_password):
+        query = 'SELECT 1 FROM orders WHERE order_id = $1 AND access_password = $2'
+        row = await Database.fetchrow(query, order_id, access_password)
+        return row is not None
