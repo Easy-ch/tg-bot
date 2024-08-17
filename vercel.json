@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "handlers.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/handlers.py" }
+  ],
+  "env": {
+    "POSTGRES_HOST": "ep-soft-snowflake-a4b3n145.us-east-1.aws.neon.tech",
+    "POSTGRES_USER": "default",
+    "POSTGRES_PASSWORD": "cNAgyo0j6JGl",
+    "POSTGRES_DATABASE": "verceldb",
+    "TOKEN": "6430079230:AAGxyL2dzCo2LJFSwuTxtmguVKv2fdlxLYw"
+
+  }
+}
