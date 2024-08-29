@@ -23,7 +23,7 @@ dp.middleware.setup(LoggingMiddleware())
 
 
 
-WEBHOOK_HOST = 'https://bbbb-alpha.vercel.app'
+WEBHOOK_HOST = 'YOUR_URL'
 WEBHOOK_PATH = f'/{TOKEN}'
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
