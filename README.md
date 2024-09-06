@@ -18,7 +18,7 @@
 
 1. **Клонируйте репозиторий**:
     ```sh
-    git clone 
+    git clone https://github.com/Easy-ch/tg-bot.git
     cd bot_end
     ```
 
