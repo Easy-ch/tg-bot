@@ -38,7 +38,7 @@
 
 4. **Запустите бота локально**:
     ```sh
-    uvicorn main:app --reload
+    python handlers.py
     ```
 ## Использование
 
